@@ -14,7 +14,8 @@ const { class: klass = '' } = Astro.props;
   </span>
 )}
 <style>
-  .logo-img { height: 38px; width: auto; }
+  .logo-img { height: 64px; width: auto; }
+  @media (max-width: 640px) { .logo-img { height: 52px; } }
   .logo-word { display: inline-flex; align-items: baseline; gap: .55em; line-height: 1; }
   .logo-word__k { font-size: 1.55rem; letter-spacing: -.02em; }
   .logo-word__t { font-size: .6rem; letter-spacing: .32em; color: var(--steel); }

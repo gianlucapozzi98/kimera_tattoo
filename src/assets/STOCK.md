@@ -3,7 +3,7 @@
 Le foto in questa cartella sono **immagini stock da Unsplash** (licenza Unsplash, uso gratuito),
 inserite solo per mostrare l'aspetto del sito. **Non sono lavori di Kimera Tattoo, Sink o Cromo**:
 vanno sostituite con le foto originali dello studio prima della pubblicazione definitiva
-(stessi nomi file, vedi README.md). Il logo non è stato sostituito.
+(stessi nomi file, vedi README.md). Il logo (brand/logo.png) invece è quello ufficiale, preso dal profilo Instagram.
 
 | File | Sorgente |
 |---|---|
