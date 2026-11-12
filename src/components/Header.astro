@@ -1,0 +1,291 @@
+---
+import Logo from './Logo.astro';
+import Arrow from './Arrow.astro';
+import { nav } from '../data/copy';
+import { site } from '../config/site';
+import { artistList } from '../config/artists';
+
+interface Props { isHome?: boolean }
+const { isHome = false } = Astro.props;
+const base = isHome ? '' : '/';
+const href = (h: string) => `${base}${h}`;
+---
+
+<header class="site-header" data-header>
+  <div class="site-header__bar">
+    <a class="site-header__logo" href={href('#home')} aria-label="Kimera Tattoo — home" data-menu-link>
+      <Logo />
+    </a>
+
+    <nav class="site-header__nav" aria-label="Principale">
+      <ul>
+        {nav.map((item, i) => (
+          <li>
+            <a href={href(item.href)} data-nav={item.id} class="navlink">
+              <span class="navlink__n mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="navlink__t">{item.label}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="btn btn--sm site-header__cta" href={href('#contact')} data-track="cta_header_book">Prenota</a>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu"
+        data-menu-toggle
+      >
+        <span class="menu-toggle__label mono" data-menu-label>Menu</span>
+        <span class="menu-toggle__icon" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu di navigazione" inert data-menu>
+    <div class="menu__inner">
+      <ul class="menu__list">
+        {nav.map((item, i) => (
+          <li style={`--i:${i}`}>
+            <a href={href(item.href)} class="menu__link" data-menu-link data-nav={item.id}>
+              <span class="menu__n mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="menu__t display display--wide">{item.label}</span>
+              <Arrow dir="ne" size={28} />
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div class="menu__side">
+        <div class="menu__col" style="--i:5">
+          <p class="mono muted">Instagram</p>
+          <ul>
+            <li><a class="link-u" href={site.social.instagram.url} target="_blank" rel="noopener" data-track="instagram_click" data-track-label="studio">@{site.social.instagram.handle}</a></li>
+            {artistList.map((a) => (
+              <li><a class="link-u" href={a.instagram} target="_blank" rel="noopener" data-track="instagram_click" data-track-label={a.id}>@{a.handle}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div class="menu__col" style="--i:6">
+          <p class="mono muted">Contatti</p>
+          <ul>
+            {site.contact.email && <li><a class="link-u" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></li>}
+            <li><a class="link-u" href={site.google.url} target="_blank" rel="noopener" data-track="google_click">Scheda Google</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 210;
+    transition: transform 0.7s var(--ease-out), background-color 0.5s ease, border-color 0.5s ease;
+    border-bottom: 1px solid transparent;
+  }
+  .site-header.is-solid {
+    background: rgb(10 10 11 / 0.92);
+    border-bottom-color: var(--line);
+  }
+  .site-header.is-hidden:not(.is-menu-open) {
+    transform: translateY(-101%);
+  }
+  .site-header__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--gap);
+    height: var(--header-h);
+    padding-inline: var(--pad);
+  }
+  .site-header__logo {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .site-header__nav ul {
+    display: flex;
+    gap: clamp(1rem, 2.6vw, 2.6rem);
+  }
+  .navlink {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.6em;
+    min-height: 44px;
+    align-items: center;
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--bone-2);
+    transition: color 0.3s;
+  }
+  .navlink__n {
+    color: var(--steel);
+    font-size: 0.6rem;
+  }
+  .navlink::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    height: 1px;
+    background: var(--bone);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease-out);
+  }
+  .navlink:hover,
+  .navlink[aria-current='true'] {
+    color: var(--bone);
+  }
+  .navlink:hover::after,
+  .navlink[aria-current='true']::after {
+    transform: scaleX(1);
+  }
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-height: 44px;
+    padding: 0 0.2rem;
+  }
+  .menu-toggle__icon {
+    position: relative;
+    width: 26px;
+    height: 10px;
+    display: block;
+  }
+  .menu-toggle__icon i {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: var(--bone);
+    transition: transform 0.6s var(--ease-out), top 0.6s var(--ease-out);
+  }
+  .menu-toggle__icon i:first-child { top: 0; }
+  .menu-toggle__icon i:last-child { top: 8px; }
+  .is-menu-open .menu-toggle__icon i:first-child { top: 4px; transform: rotate(45deg); }
+  .is-menu-open .menu-toggle__icon i:last-child { top: 4px; transform: rotate(-45deg); }
+
+  /* Menu a tutto schermo */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--ink-0);
+    clip-path: inset(0 0 100% 0);
+    visibility: hidden;
+    transition: clip-path 0.9s var(--ease-io), visibility 0s linear 0.9s;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .is-menu-open .menu {
+    clip-path: inset(0 0 0 0);
+    visibility: visible;
+    transition: clip-path 0.9s var(--ease-io), visibility 0s;
+  }
+  .menu::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 50% at 85% 90%, rgb(236 232 223 / 0.07), transparent 70%);
+    pointer-events: none;
+  }
+  .menu__inner {
+    min-height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 2.5rem;
+    padding: calc(var(--header-h) + 2rem) var(--pad) 3rem;
+  }
+  .menu__list {
+    display: grid;
+  }
+  .menu__link {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding-block: clamp(0.4rem, 1.2vh, 0.9rem);
+    border-bottom: 1px solid var(--line);
+    min-height: 44px;
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 0.7s var(--ease-out), transform 0.9s var(--ease-out), color 0.3s;
+  }
+  .is-menu-open .menu__link {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.35s + var(--i) * 0.07s), calc(0.35s + var(--i) * 0.07s), 0s;
+  }
+  .menu__n { color: var(--steel); }
+  .menu__t {
+    font-size: clamp(2.4rem, 9vw, 7rem);
+    line-height: 0.95;
+    transition: transform 0.6s var(--ease-out), -webkit-text-stroke-color 0.3s;
+    color: var(--bone);
+  }
+  .menu__link:hover .menu__t,
+  .menu__link:focus-visible .menu__t {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--bone);
+    transform: translateX(14px);
+  }
+  .menu__link :global(.arr) { opacity: 0.6; }
+  .menu__side {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+  .menu__col {
+    display: grid;
+    gap: 0.7rem;
+    align-content: start;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.7s var(--ease-out), transform 0.8s var(--ease-out);
+  }
+  .is-menu-open .menu__col {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.35s + var(--i) * 0.07s);
+  }
+  .menu__col ul { display: grid; gap: 0.35rem; font-size: 1rem; }
+  .menu__col a { display: inline-block; min-height: 24px; }
+
+  @media (min-width: 900px) {
+    .menu__inner {
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+      align-items: end;
+      gap: 4rem;
+    }
+    .menu__side { grid-template-columns: 1fr; align-self: end; padding-bottom: 1rem; }
+  }
+  @media (max-width: 1099px) {
+    .site-header__nav { display: none; }
+  }
+  @media (max-width: 520px) {
+    .site-header__cta { display: none; }
+  }
+  @media (min-width: 1100px) {
+    .menu-toggle__label { display: inline; }
+  }
+</style>

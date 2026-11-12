@@ -1,0 +1,37 @@
+---
+import Base from './Base.astro';
+import { site } from '../config/site';
+
+interface Props { title: string; description: string; path: string; kicker: string }
+const { title, description, path, kicker } = Astro.props;
+---
+
+<Base title={`${title} — Kimera Tattoo`} description={description} path={path} compactFooter bodyClass="legal">
+  <article class="legal__wrap wrap">
+    <header class="legal__head">
+      <p class="mono muted">{kicker}</p>
+      <h1 class="display display--wide legal__title">{title}</h1>
+      <p class="mono muted">Ultimo aggiornamento: {site.legal.lastUpdate}</p>
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</Base>
+
+<style is:global>
+  .legal__wrap { padding-block: calc(var(--header-h) + clamp(3rem, 8vh, 6rem)) clamp(4rem, 10vh, 8rem); display: grid; gap: 3rem; max-width: 1100px; margin-inline: auto; }
+  .legal__title { font-size: clamp(2.4rem, 8vw, 6rem); line-height: 0.92; margin-block: 1rem; }
+  .prose { max-width: 70ch; display: grid; gap: 1.1rem; color: var(--bone-2); font-size: 1.02rem; }
+  .prose h2 { margin-top: 2.2rem; padding-top: 1.2rem; border-top: 1px solid var(--line-2); font-family: var(--f-display); font-weight: 800; font-stretch: 100%; font-size: clamp(1.3rem, 3vw, 1.8rem); line-height: 1.1; letter-spacing: -0.01em; color: var(--bone); text-transform: none; }
+  .prose h3 { font-size: 1.05rem; color: var(--bone); margin-top: 0.8rem; }
+  .prose a { color: var(--bone); text-decoration: underline; text-underline-offset: 3px; }
+  .prose ul, .prose ol { display: grid; gap: 0.5rem; padding-left: 1.3rem; list-style: disc; }
+  .prose ol { list-style: decimal; }
+  .prose strong { color: var(--bone); }
+  .prose .note { padding: 1rem 1.2rem; border-left: 2px solid var(--accent); background: rgb(200 54 31 / 0.08); color: var(--bone); }
+  .prose table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+  .prose th, .prose td { text-align: left; padding: 0.7rem 0.8rem 0.7rem 0; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+  .prose th { font-family: var(--f-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--steel); }
+  .legal .site-header { background: rgb(10 10 11 / 0.92); border-bottom-color: var(--line); }
+</style>

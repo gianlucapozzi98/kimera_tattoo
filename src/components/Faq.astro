@@ -1,0 +1,59 @@
+---
+import Split from './Split.astro';
+import { faqs } from '../data/faq';
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<section class="faq" id="faq" data-faq aria-labelledby="faq-title">
+  <div class="wrap faq__grid">
+    <header class="faq__head">
+      <p class="mono muted" data-reveal="fade">(06) — FAQ</p>
+      <Split as="h2" id="faq-title" class="display faq__title" lines={['Domande', 'frequenti.']} lineClass={['', 'serif-line']} />
+    </header>
+    <div class="faq__list">
+      {faqs.map((f, i) => (
+        <details class="q" data-reveal>
+          <summary class="q__s">
+            <span class="q__n mono muted">{pad(i + 1)}</span>
+            <span class="q__t">{f.q}</span>
+            <span class="q__i" aria-hidden="true"><i></i><i></i></span>
+          </summary>
+          <div class="q__a"><p>{f.a}</p></div>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq { padding-block: clamp(5rem, 12vh, 9rem); background: var(--ink-1); border-top: 1px solid var(--line); }
+  .faq__grid { display: grid; gap: 2.5rem; }
+  .faq__head { display: grid; gap: 1.2rem; align-content: start; }
+  :global(.faq__title) { font-size: clamp(3rem, 9vw, 9rem); line-height: 0.86; }
+  :global(.faq__title .serif-line) { font-family: var(--f-serif); font-style: italic; font-weight: 400; text-transform: none; letter-spacing: -0.02em; font-size: 1.08em; }
+  :global(.faq__title .serif-line .sw) { padding-bottom: 0.24em; margin-bottom: -0.24em; padding-right: 0.06em; }
+  .q { border-top: 1px solid var(--line-2); }
+  .q:last-child { border-bottom: 1px solid var(--line-2); }
+  .q__s {
+    display: grid;
+    grid-template-columns: 2.6rem 1fr 28px;
+    gap: 0.6rem;
+    align-items: center;
+    min-height: 64px;
+    padding-block: 1rem;
+    cursor: pointer;
+    list-style: none;
+  }
+  .q__s::-webkit-details-marker { display: none; }
+  .q__t { font-size: clamp(1.05rem, 0.95rem + 0.6vw, 1.5rem); font-weight: 600; line-height: 1.25; letter-spacing: -0.01em; transition: transform 0.5s var(--ease-out); }
+  .q__s:hover .q__t { transform: translateX(6px); }
+  .q__i { position: relative; width: 20px; height: 20px; justify-self: end; }
+  .q__i i { position: absolute; left: 0; right: 0; top: 9px; height: 1.5px; background: var(--bone); transition: transform 0.5s var(--ease-out); }
+  .q__i i:last-child { transform: rotate(90deg); }
+  .q[open] .q__i i:last-child { transform: rotate(0deg); }
+  .q__a { overflow: hidden; padding: 0 0 1.4rem 3.2rem; max-width: 62ch; color: var(--bone-2); }
+  @media (min-width: 900px) {
+    .faq__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: var(--gap); }
+    .faq__head { position: sticky; top: calc(var(--header-h) + 2rem); align-self: start; }
+  }
+</style>

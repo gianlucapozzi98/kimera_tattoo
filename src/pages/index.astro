@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Manifesto from '../components/Manifesto.astro';
+import HorizontalShowcase from '../components/HorizontalShowcase.astro';
+import AliveStory from '../components/AliveStory.astro';
+import Artists from '../components/Artists.astro';
+import Portfolio from '../components/Portfolio.astro';
+import Studio from '../components/Studio.astro';
+import Faq from '../components/Faq.astro';
+import Contact from '../components/Contact.astro';
+import { faqs } from '../data/faq';
+import { site } from '../config/site';
+
+const faqLd = {
+  '@type': 'FAQPage',
+  '@id': `${site.url}/#faq`,
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+};
+---
+<Base
+  title="Kimera Tattoo — Sink & Cromo | Studio di tatuaggi"
+  description="Kimera Tattoo: studio di tatuaggi con due artisti, Sink e Cromo. Sfoglia i lavori, scegli l’artista e richiedi un appuntamento."
+  path="/"
+  jsonLd={[faqLd]}
+>
+  <Hero />
+  <Manifesto />
+  <HorizontalShowcase />
+  <AliveStory />
+  <Artists />
+  <Portfolio />
+  <Studio />
+  <Faq />
+  <Contact />
+</Base>

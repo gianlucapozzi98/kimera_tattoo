@@ -1,0 +1,24 @@
+---
+/** Sigillo circolare con testo su tracciato — elemento grafico da timbro / incisione. */
+interface Props { text?: string; id: string; class?: string; center?: boolean }
+const { text = 'KIMERA TATTOO • SINK × CROMO • YOUR SKIN • YOUR STORY • ', id, class: klass = '' } = Astro.props;
+---
+<svg class={`seal ${klass}`} viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+  <defs>
+    <path id={`seal-${id}`} d="M60,60 m-47,0 a47,47 0 1,1 94,0 a47,47 0 1,1 -94,0" />
+  </defs>
+  <circle cx="60" cy="60" r="58.5" fill="none" stroke="currentColor" stroke-width=".6" opacity=".5" />
+  <circle cx="60" cy="60" r="35" fill="none" stroke="currentColor" stroke-width=".6" opacity=".5" />
+  <g class="seal__ring">
+    <text font-size="8.6" font-family="JetBrains Mono Variable, monospace" font-weight="600" fill="currentColor" textLength="291" lengthAdjust="spacing">
+      <textPath href={`#seal-${id}`} textLength="291" lengthAdjust="spacing">{text}</textPath>
+    </text>
+  </g>
+  <path d="M60 46v28M46 60h28M50 50l20 20M70 50 50 70" stroke="currentColor" stroke-width=".8" opacity=".85" />
+  <circle cx="60" cy="60" r="2.2" fill="currentColor" />
+</svg>
+<style>
+  .seal { width: 100%; height: 100%; overflow: visible; }
+  .seal__ring { transform-origin: 60px 60px; animation: seal-spin 40s linear infinite; }
+  @keyframes seal-spin { to { transform: rotate(360deg); } }
+</style>

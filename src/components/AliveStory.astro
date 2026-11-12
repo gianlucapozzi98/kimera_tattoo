@@ -1,0 +1,328 @@
+---
+import Photo from './Photo.astro';
+import Marks from './Marks.astro';
+import Split from './Split.astro';
+import { aliveWork } from '../data/works';
+import { alive } from '../data/copy';
+
+const w = aliveWork();
+const rays = Array.from({ length: 90 }, (_, i) => (i / 90) * Math.PI * 2);
+---
+
+<section class="alive" id="alive" data-alive aria-labelledby="alive-title" style={`--r:${w.ratio.toFixed(3)}`}>
+  <div class="alive__sticky" data-sticky>
+    <div class="alive__bg" aria-hidden="true">
+      <div class="alive__ghost" data-ghost>
+        <Photo image={w.image} alt="" focal={w.focal} sizes="60vw" widths={[480, 960]} plateQuiet plateVariant={0} />
+      </div>
+      <svg class="alive__rays" data-rays viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid slice" focusable="false">
+        {rays.map((a, i) => (
+          <line x1={(Math.cos(a) * (i % 5 === 0 ? 26 : 34)).toFixed(2)} y1={(Math.sin(a) * (i % 5 === 0 ? 26 : 34)).toFixed(2)} x2={(Math.cos(a) * 150).toFixed(2)} y2={(Math.sin(a) * 150).toFixed(2)} />
+        ))}
+      </svg>
+      <canvas class="alive__dust" data-dust></canvas>
+      <div class="alive__giant display display--wide" data-giant>ALIVE</div>
+    </div>
+
+    <header class="alive__head">
+      <p class="mono muted" data-reveal="fade">(02) — {alive.kicker}</p>
+      <Split as="h2" id="alive-title" class="display alive__title" lines={alive.title} noAuto />
+    </header>
+
+    <div class="alive__stage">
+      <figure class="alive__frame" data-frame>
+        <div class="alive__photo" data-main>
+          <Photo
+            image={w.image}
+            alt={w.alt}
+            focal={w.focal}
+            sizes="(min-width: 900px) 46vw, 90vw"
+            widths={[640, 960, 1400, 2000, 2600]}
+            plateVariant={1}
+            plateQuiet
+          />
+        </div>
+        <div class="alive__light" data-light aria-hidden="true"></div>
+        <div class="alive__lens" data-lens aria-hidden="true"><div class="alive__lens-in" data-lens-in></div></div>
+        <svg class="alive__ring" data-ring viewBox="0 0 100 100" aria-hidden="true" style={`left:${w.focal.x * 100}%;top:${w.focal.y * 100}%`}>
+          <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width=".5" />
+          <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1 5" />
+        </svg>
+        <Marks size={16} inset={12} />
+        <figcaption class="alive__cap mono" aria-hidden="true">{w.placeholder ? `Opera da inserire · ${w.slot}` : `Fig. — ${w.artistName}`}</figcaption>
+      </figure>
+
+      <div class="alive__frag" data-frag aria-hidden="true">
+        <div class="alive__frag-in">
+          <Photo image={w.image} alt="" focal={w.focal} sizes="(min-width: 900px) 70vw, 140vw" widths={[960, 1400, 2000, 2600]} plateQuiet plateVariant={2} />
+        </div>
+        <Marks size={12} inset={8} />
+        <span class="alive__frag-tag mono">Dettaglio ×2.4</span>
+      </div>
+    </div>
+
+    <ol class="alive__acts" data-acts>
+      {alive.acts.map((a, i) => (
+        <li class="act" data-act={i}>
+          <span class="act__n serif">{a.n}</span>
+          <span class="act__body"><b class="mono">{a.t}</b><span>{a.d}</span></span>
+        </li>
+      ))}
+    </ol>
+
+    <p class="alive__hint mono muted" data-hint>
+      <span class="hint-mouse">{alive.hint}</span><span class="hint-touch">{alive.hintTouch}</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .alive {
+    position: relative;
+    background: var(--ink-2);
+    color: var(--bone);
+    overflow: clip;
+  }
+  .alive__sticky {
+    position: relative;
+    min-height: 100svh;
+    padding: calc(var(--header-h) + 3rem) var(--pad) 4rem;
+    display: grid;
+    gap: 2.2rem;
+    align-content: start;
+  }
+
+  /* ── livello 0: atmosfera ── */
+  .alive__bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .alive__ghost {
+    position: absolute;
+    inset: -12%;
+    opacity: 0.2;
+    filter: blur(46px) saturate(0.7);
+    will-change: transform;
+  }
+  .alive__bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(80% 70% at 50% 45%, transparent 0%, var(--ink-2) 100%);
+  }
+  .alive__rays {
+    position: absolute;
+    inset: -20%;
+    width: 140%;
+    height: 140%;
+    stroke: var(--bone);
+    stroke-width: 0.12;
+    opacity: 0.16;
+    will-change: transform;
+  }
+  .alive__dust {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .alive__giant {
+    position: absolute;
+    left: -2vw;
+    bottom: -3vw;
+    font-size: 28vw;
+    line-height: 0.75;
+    color: transparent;
+    -webkit-text-stroke: 1px rgb(236 232 223 / 0.14);
+    white-space: nowrap;
+    will-change: transform;
+  }
+
+  /* ── testo ── */
+  .alive__head {
+    position: relative;
+    z-index: 5;
+    display: grid;
+    gap: 1.2rem;
+  }
+  :global(.alive__title) {
+    font-size: clamp(2.8rem, 12vw, 5rem);
+    line-height: 0.86;
+  }
+
+  /* ── palco ── */
+  .alive__stage {
+    position: relative;
+    z-index: 3;
+    display: grid;
+    justify-items: start;
+    padding-bottom: 5rem;
+  }
+  .alive__frame {
+    --h: min(70vh, 740px);
+    position: relative;
+    width: min(100%, calc(var(--h) * var(--r)));
+    aspect-ratio: var(--r);
+    background: var(--ink-3);
+    overflow: hidden;
+    touch-action: pan-y;
+    cursor: crosshair;
+    box-shadow: 0 40px 90px -30px rgb(0 0 0 / 0.85);
+  }
+  .alive__photo {
+    position: absolute;
+    inset: 0;
+    transform-origin: var(--ox, 50%) var(--oy, 50%);
+    will-change: transform;
+  }
+  .alive__photo :global(.photo) { position: absolute; inset: 0; }
+  .alive__light {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle 320px at var(--mx, 50%) var(--my, 50%), transparent 0%, rgb(5 5 5 / 0.5) 100%);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .alive__frame.is-hover .alive__light { opacity: 1; }
+  .alive__lens {
+    --d: 176px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: var(--d);
+    height: var(--d);
+    border-radius: 50%;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-200px, -200px);
+    border: 1px solid var(--bone);
+    box-shadow: 0 0 0 6px rgb(5 5 5 / 0.35), 0 20px 50px rgb(0 0 0 / 0.6);
+    transition: opacity 0.35s;
+    z-index: 4;
+  }
+  .alive__frame.is-hover .alive__lens { opacity: 1; }
+  .alive__lens-in { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+  .alive__ring {
+    position: absolute;
+    width: 20%;
+    aspect-ratio: 1;
+    margin: -10% 0 0 -10%;
+    color: var(--bone);
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.2);
+  }
+  .alive__cap {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    color: var(--accent-text);
+    z-index: 3;
+  }
+
+  /* frammento che esce dalla cornice */
+  .alive__frag {
+    position: absolute;
+    z-index: 6;
+    right: 4%;
+    bottom: -3.2rem;
+    width: min(52vw, 280px);
+    aspect-ratio: 1;
+    background: var(--ink-3);
+    box-shadow: 0 30px 70px -10px rgb(0 0 0 / 0.9);
+    pointer-events: none;
+    will-change: transform;
+  }
+  .alive__frag-in {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .alive__frag-in :global(.photo) {
+    transform: scale(2.4);
+    transform-origin: var(--fx) var(--fy);
+  }
+  .alive__frag-tag {
+    position: absolute;
+    left: 10px;
+    bottom: -1.7rem;
+    color: var(--steel);
+  }
+
+  /* atti */
+  .alive__acts {
+    position: relative;
+    z-index: 5;
+    display: grid;
+    gap: 1.1rem;
+    max-width: 420px;
+  }
+  .act {
+    display: grid;
+    grid-template-columns: 2.4rem 1fr;
+    gap: 0.9rem;
+    align-items: baseline;
+    transition: opacity 0.5s var(--ease-out);
+  }
+  :global(.alive.is-scrub) .act { opacity: 0.3; }
+  :global(.alive.is-scrub) .act.is-on { opacity: 1; }
+  .act__n { font-size: 2rem; line-height: 1; }
+  .act__body { display: grid; gap: 0.2rem; }
+  .act__body b { color: var(--bone); }
+  .act__body span { color: var(--bone-2); font-size: 0.95rem; line-height: 1.4; }
+  .alive__hint { position: relative; z-index: 5; }
+  .hint-touch { display: none; }
+  @media (hover: none) {
+    .hint-mouse { display: none; }
+    .hint-touch { display: inline; }
+  }
+
+  /* ═════ DESKTOP: palco fissato + timeline scrubbata ═════ */
+  @media (min-width: 900px) {
+    .alive.is-scrub { height: 340svh; }
+    .alive.is-scrub .alive__sticky {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      min-height: 640px;
+      padding: 0;
+      display: block;
+      overflow: hidden;
+    }
+    .alive__head {
+      position: absolute;
+      left: var(--pad);
+      top: calc(var(--header-h) + 4vh);
+      mix-blend-mode: difference;
+    }
+    :global(.alive__title) { font-size: clamp(3rem, 6.6vw, 9rem); }
+    .alive__stage {
+      position: absolute;
+      inset: 0;
+      padding: calc(var(--header-h) + 3vh) 0 4vh 24vw;
+      align-content: center;
+    }
+    .alive:not(.is-scrub) .alive__stage { position: relative; padding: 2rem 0 5rem 24vw; }
+    .alive__frame { width: min(calc(var(--h) * var(--r)), 44vw); }
+    .alive__frag { right: auto; left: calc(24vw + min(calc(var(--h, 70vh) * var(--r)), 44vw) - 7vw); bottom: 9vh; width: min(18vw, 280px); }
+    .alive__acts {
+      position: absolute;
+      right: var(--pad);
+      bottom: 11vh;
+      width: min(21vw, 300px);
+    }
+    .alive:not(.is-scrub) .alive__acts { position: relative; right: auto; bottom: auto; margin-top: 3rem; }
+    .alive__hint { position: absolute; left: var(--pad); bottom: 5vh; }
+  }
+
+  /* ═════ MOBILE: composizione propria ═════ */
+  @media (max-width: 899px) {
+    .alive__frame { width: 100%; max-height: 80svh; }
+    .alive__frag { right: 6%; width: 44vw; bottom: -2.4rem; }
+    .alive__acts { margin-top: 3rem; }
+  }
+</style>

@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import Marks from '../components/Marks.astro';
+---
+<Base title="Pagina non trovata — Kimera Tattoo" description="La pagina che cerchi non esiste o è stata spostata." path="/404/" noindex compactFooter bodyClass="notfound">
+  <section class="nf">
+    <Marks size={22} inset="calc(var(--header-h) + 14px) 18px 18px 18px" />
+    <div class="nf__in wrap">
+      <p class="mono muted">Errore 404</p>
+      <p class="nf__num display display--wide" aria-hidden="true">404</p>
+      <h1 class="nf__t serif">Segno non trovato.</h1>
+      <p class="nf__p">La pagina che cerchi non esiste, è stata spostata o non è mai stata incisa.</p>
+      <div class="nf__cta">
+        <a class="btn btn--solid" href="/"><span>Torna alla home</span><Arrow /></a>
+        <a class="btn" href="/#portfolio"><span>Guarda i lavori</span><Arrow /></a>
+        <a class="btn" href="/#contact"><span>Contatta lo studio</span><Arrow /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { position: relative; min-height: 100svh; display: grid; align-items: center; overflow: hidden; }
+  .nf__in { display: grid; gap: 1.4rem; padding-block: calc(var(--header-h) + 3rem) 4rem; justify-items: start; }
+  .nf__num { font-size: clamp(7rem, 34vw, 34rem); line-height: 0.74; color: transparent; -webkit-text-stroke: 1.5px var(--bone); margin-left: -0.04em; }
+  .nf__t { font-size: clamp(2.4rem, 7vw, 5.4rem); line-height: 1; margin-top: -0.4em; }
+  .nf__p { max-width: 42ch; color: var(--bone-2); }
+  .nf__cta { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+</style>

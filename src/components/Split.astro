@@ -1,0 +1,31 @@
+---
+/**
+ * Titolo con parole pre-divise a build-time (nessun layout shift, nessun JS per lo split).
+ * L'aria-label conserva il testo integro per screen reader e SEO.
+ */
+interface Props {
+  as?: string;
+  text?: string;
+  lines?: string[];
+  class?: string;
+  id?: string;
+  /** classe per riga (es. per stili diversi tra le righe) */
+  lineClass?: string[];
+  /** esclude il titolo dal reveal automatico (gestito da uno script di sezione) */
+  noAuto?: boolean;
+  [key: string]: unknown;
+}
+const { as: TagName = 'h2', text, lines, class: klass = '', id, lineClass = [], noAuto = false, ...rest } = Astro.props;
+const ls = lines ?? [text ?? ''];
+const label = ls.join(' ');
+const Tag = TagName as 'h2';
+---
+<Tag class={klass} id={id} aria-label={label} data-split data-no-auto-split={noAuto ? '' : undefined} {...rest}>
+  {ls.map((line, li) => (
+    <span class={`sl ${lineClass[li] ?? ''}`} aria-hidden="true" style="display:block">
+      {line.split(' ').map((w, i, arr) => (
+        <><span class="sw"><span class="sw__i">{w}</span></span>{i < arr.length - 1 ? ' ' : ''}</>
+      ))}
+    </span>
+  ))}
+</Tag>

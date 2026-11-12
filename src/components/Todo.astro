@@ -1,0 +1,6 @@
+---
+/** Mostra il dato reale se presente, altrimenti un segnaposto ben visibile "da completare". */
+interface Props { value?: string | null; label: string }
+const { value, label } = Astro.props;
+---
+{value ? value : <span class="todo">[da completare: {label}]</span>}

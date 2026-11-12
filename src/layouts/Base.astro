@@ -1,0 +1,158 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/instrument-serif/400.css';
+import '@fontsource/instrument-serif/400-italic.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
+import '../styles/global.css';
+import archivoLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import CookieBanner from '../components/CookieBanner.astro';
+import { site } from '../config/site';
+import { artistList } from '../config/artists';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Percorso canonico, es. "/" o "/privacy/" */
+  path?: string;
+  noindex?: boolean;
+  ogImage?: string;
+  /** JSON-LD aggiuntivo (oggetti schema.org) */
+  jsonLd?: Record<string, unknown>[];
+  /** Nasconde il lungo footer "curtain" nelle pagine di servizio */
+  compactFooter?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  path = Astro.url.pathname,
+  noindex = false,
+  ogImage = '/og-default.jpg',
+  jsonLd = [],
+  compactFooter = false,
+  bodyClass = '',
+} = Astro.props;
+
+const canonical = new URL(path, site.url + '/').toString();
+const ogUrl = new URL(ogImage, site.url + '/').toString();
+const isHome = path === '/';
+
+const org: Record<string, unknown> = {
+  '@type': 'TattooParlor',
+  '@id': `${site.url}/#studio`,
+  name: site.name,
+  url: `${site.url}/`,
+  description: site.description,
+  image: ogUrl,
+  sameAs: [site.social.instagram.url, site.google.url],
+  employee: artistList.map((a) => ({ '@type': 'Person', name: a.name, sameAs: a.instagram })),
+};
+if (site.contact.email) org.email = site.contact.email;
+if (site.contact.phone) org.telephone = site.contact.phone;
+if (site.contact.address) {
+  const a = site.contact.address;
+  org.address = {
+    '@type': 'PostalAddress',
+    streetAddress: a.street,
+    postalCode: a.zip,
+    addressLocality: a.city,
+    addressRegion: a.province,
+    addressCountry: a.country ?? 'IT',
+  };
+}
+const graph = [
+  org,
+  { '@type': 'WebSite', '@id': `${site.url}/#website`, url: `${site.url}/`, name: site.name, inLanguage: 'it-IT', publisher: { '@id': `${site.url}/#studio` } },
+  ...jsonLd,
+];
+const ld = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+const clientCfg = JSON.stringify({ ga4: site.analytics.ga4, plausible: site.analytics.plausibleDomain });
+---
+
+<!doctype html>
+<html lang={site.lang} class="">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+    <meta name="theme-color" content="#0a0a0b" />
+    <meta name="color-scheme" content="dark" />
+
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={site.locale} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Kimera Tattoo — Your skin. Your story. Our art." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    <link rel="preload" href={archivoLatin} as="font" type="font/woff2" crossorigin />
+
+    <!-- stato JS/motion prima del primo paint: evita flash e garantisce fallback -->
+    <script is:inline>
+      (function (d) {
+        var r = d.documentElement;
+        r.classList.add('js');
+        var rm = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!rm) r.classList.add('anim');
+        setTimeout(function () {
+          if (!r.classList.contains('ready')) r.classList.add('anim-fail');
+        }, 8000);
+      })(document);
+    </script>
+
+    <script type="application/ld+json" set:html={ld} />
+    <script type="application/json" id="kimera-config" set:html={clientCfg} />
+  </head>
+  <body class={bodyClass} data-page={isHome ? 'home' : 'page'}>
+    <a class="skip-link" href="#main">Vai al contenuto</a>
+    <Header isHome={isHome} />
+    <div class="page-shell">
+      <main id="main" tabindex="-1">
+        <slot />
+      </main>
+    </div>
+    <Footer compact={compactFooter} />
+    <CookieBanner />
+    <div class="grain" aria-hidden="true"></div>
+    <div class="vignette" aria-hidden="true"></div>
+    <noscript>
+      <style>
+        .menu-toggle { display: none !important; }
+      </style>
+    </noscript>
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  .page-shell {
+    position: relative;
+    z-index: 2;
+    background: var(--ink-1);
+  }
+  main:focus {
+    outline: none;
+  }
+</style>

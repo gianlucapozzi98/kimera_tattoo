@@ -1,0 +1,101 @@
+---
+import Arrow from './Arrow.astro';
+import Seal from './Seal.astro';
+import { site } from '../config/site';
+import { artistList } from '../config/artists';
+import { nav } from '../data/copy';
+
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const year = new Date().getFullYear();
+const word = 'KIMERA'.split('');
+---
+
+<footer class={`footer${compact ? ' footer--compact' : ''}`} data-footer>
+  <div class="footer__inner wrap">
+    <div class="footer__top">
+      <div class="footer__cols">
+        <nav aria-label="Footer: sezioni">
+          <p class="mono muted">Sito</p>
+          <ul>
+            {nav.map((n) => <li><a class="link-u" href={`/${n.href}`}>{n.label}</a></li>)}
+            <li><a class="link-u" href="/#faq">FAQ</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Footer: social">
+          <p class="mono muted">Social</p>
+          <ul>
+            <li><a class="link-u" href={site.social.instagram.url} target="_blank" rel="noopener" data-track="instagram_click" data-track-label="studio">@{site.social.instagram.handle}</a></li>
+            {artistList.map((a) => <li><a class="link-u" href={a.instagram} target="_blank" rel="noopener" data-track="instagram_click" data-track-label={a.id}>@{a.handle}</a></li>)}
+            <li><a class="link-u" href={site.google.url} target="_blank" rel="noopener" data-track="google_click">Google</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Footer: informazioni legali">
+          <p class="mono muted">Legale</p>
+          <ul>
+            <li><a class="link-u" href="/privacy/">Privacy Policy</a></li>
+            <li><a class="link-u" href="/terms/">Termini di utilizzo</a></li>
+            <li><a class="link-u" href="/cookie-policy/">Cookie Policy</a></li>
+            <li><button type="button" class="link-u footer__btn" data-cookie-open>Preferenze cookie</button></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="footer__cta">
+        <p class="footer__q serif">Hai un’idea?</p>
+        <a class="btn btn--solid" href="/#contact" data-scroll-to="#contact" data-track="cta_footer_book"><span>Richiedi un appuntamento</span><Arrow /></a>
+        <a class="footer__top-btn mono" href="#main" data-scroll-to="#home" aria-label="Torna su: all’inizio della pagina">Torna su <Arrow dir="u" /></a>
+      </div>
+    </div>
+
+    <p class="footer__wordmark display display--wide" aria-hidden="true" data-wordmark>
+      {word.map((c) => <span class="ch"><span class="ch__i">{c}</span></span>)}
+    </p>
+
+    <div class="footer__bottom mono">
+      <span>© {year} {site.legal.companyName ?? site.name}{site.legal.vatNumber ? ` — P.IVA ${site.legal.vatNumber}` : ''}</span>
+      <span class="muted">Your skin. Your story. Our art.</span>
+    </div>
+  </div>
+  <div class="footer__seal" aria-hidden="true"><Seal id="footer" /></div>
+</footer>
+
+<style>
+  .footer { position: relative; background: var(--ink-0); color: var(--bone); overflow: hidden; z-index: 1; border-top: 1px solid var(--line); }
+  .footer__inner { position: relative; z-index: 2; padding-block: clamp(3rem, 8vh, 6rem) 1.4rem; display: grid; gap: 3rem; }
+  .footer__top { display: grid; gap: 3rem; }
+  .footer__cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+  .footer__cols nav { display: grid; gap: 0.9rem; align-content: start; }
+  .footer__cols ul { display: grid; gap: 0.2rem; }
+  .footer__cols a, .footer__btn { display: inline-flex; align-items: center; min-height: 36px; font-size: 1rem; }
+  .footer__btn { text-align: left; }
+  .footer__cta { display: grid; gap: 1.2rem; align-content: start; justify-items: start; }
+  .footer__q { font-size: clamp(2.4rem, 7vw, 4.4rem); line-height: 1; }
+  .footer__top-btn { display: inline-flex; align-items: center; gap: 0.6em; min-height: 44px; color: var(--steel); }
+  .footer__top-btn:hover { color: var(--bone); }
+  .footer__wordmark {
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+    margin-inline: -0.05em;
+    font-size: clamp(4rem, 18.4vw, 30rem);
+    line-height: 0.74;
+    letter-spacing: -0.04em;
+    overflow: hidden;
+    user-select: none;
+  }
+  .ch { display: inline-block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+  .ch__i { display: inline-block; }
+  .footer__wordmark .ch:nth-child(even) .ch__i { color: transparent; -webkit-text-stroke: 1.5px var(--bone); }
+  .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem 2rem; padding-top: 1.2rem; border-top: 1px solid var(--line); color: var(--bone-2); }
+  .footer__seal { position: absolute; right: var(--pad); top: 3rem; width: 120px; height: 120px; color: var(--bone); opacity: 0.35; display: none; }
+  .footer--compact .footer__wordmark { display: none; }
+  .footer--compact .footer__inner { padding-block: 3rem 1.2rem; }
+  @media (min-width: 900px) {
+    .footer__top { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--gap); }
+    .footer__cols { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .footer__seal { display: block; }
+  }
+  :global(.anim:not(.anim-fail)) .ch__i { transform: translate3d(0, 105%, 0); }
+  :global(.anim:not(.anim-fail)) .footer.is-in .ch__i { transform: none; }
+</style>

@@ -1,0 +1,16 @@
+---
+/** Crocini di registro agli angoli (elemento grafico da tavola di stampa / incisione). */
+interface Props { size?: number; inset?: number | string; class?: string }
+const { size = 14, inset = 0, class: klass = '' } = Astro.props;
+---
+<span class={`marks ${klass}`} aria-hidden="true" style={`--ms:${size}px;--mi:${typeof inset === 'number' ? inset + 'px' : inset}`}>
+  <i class="m tl"></i><i class="m tr"></i><i class="m bl"></i><i class="m br"></i>
+</span>
+<style>
+  .marks { position: absolute; inset: var(--mi); pointer-events: none; }
+  .m { position: absolute; width: var(--ms); height: var(--ms); border: 0 solid var(--bone); opacity: .75; }
+  .tl { left: 0; top: 0; border-left-width: 1px; border-top-width: 1px; }
+  .tr { right: 0; top: 0; border-right-width: 1px; border-top-width: 1px; }
+  .bl { left: 0; bottom: 0; border-left-width: 1px; border-bottom-width: 1px; }
+  .br { right: 0; bottom: 0; border-right-width: 1px; border-bottom-width: 1px; }
+</style>

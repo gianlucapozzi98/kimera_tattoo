@@ -1,0 +1,73 @@
+---
+import Legal from '../layouts/Legal.astro';
+import Todo from '../components/Todo.astro';
+import { site } from '../config/site';
+const l = site.legal;
+const hasAnalytics = !!(site.analytics.ga4 || site.analytics.plausibleDomain);
+---
+<Legal
+  title="Privacy Policy"
+  kicker="Informativa ai sensi degli artt. 13–14 del Regolamento UE 2016/679 (GDPR)"
+  path="/privacy/"
+  description="Informativa privacy di Kimera Tattoo: come trattiamo i dati inviati tramite il modulo di richiesta e i dati di navigazione."
+>
+  <p class="note">
+    Questo testo è una bozza redatta in buona fede sulla base delle funzionalità reali del sito. Prima della pubblicazione va completato con i dati del titolare
+    e verificato da un consulente legale / DPO.
+  </p>
+
+  <h2>1. Titolare del trattamento</h2>
+  <p>
+    <strong><Todo value={l.companyName} label="ragione sociale / nome del titolare" /></strong><br />
+    Sede: <Todo value={l.registeredOffice} label="sede legale" /><br />
+    P.IVA: <Todo value={l.vatNumber} label="partita IVA" />{l.fiscalCode ? <> — C.F. {l.fiscalCode}</> : null}<br />
+    Contatto privacy: <Todo value={l.privacyEmail} label="email per richieste privacy" />{l.pec ? <> — PEC {l.pec}</> : null}
+  </p>
+
+  <h2>2. Quali dati trattiamo</h2>
+  <ul>
+    <li><strong>Dati forniti dall’utente tramite il modulo di richiesta:</strong> nome, email, telefono (facoltativo), artista desiderato, tipologia di tatuaggio, dimensione indicativa, zona del corpo, descrizione dell’idea ed eventuali immagini di riferimento allegate.</li>
+    <li><strong>Dati di navigazione:</strong> indirizzo IP, data e ora della richiesta, pagina visitata, informazioni sul browser; vengono registrati dai sistemi tecnici necessari al funzionamento e alla sicurezza del sito.</li>
+    <li><strong>Dati di utilizzo anonimi (statistiche):</strong> trattati <em>solo se l’utente presta il consenso</em> tramite il banner cookie{hasAnalytics ? '' : ' (al momento nessuno strumento di statistica risulta attivo)'}.</li>
+  </ul>
+  <p class="note">Ti chiediamo di <strong>non inserire nel modulo dati relativi alla salute</strong> (allergie, patologie, ecc.) né altre categorie particolari di dati: eventuali informazioni di questo tipo verranno raccolte, se necessario, direttamente dallo studio con le garanzie previste.</p>
+
+  <h2>3. Finalità e basi giuridiche</h2>
+  <table>
+    <thead><tr><th>Finalità</th><th>Base giuridica</th></tr></thead>
+    <tbody>
+      <tr><td>Rispondere alla tua richiesta e, se richiesto, gestire l’eventuale appuntamento.</td><td>Art. 6.1.b GDPR — misure precontrattuali adottate su richiesta dell’interessato.</td></tr>
+      <tr><td>Sicurezza del sito, prevenzione di abusi e spam (es. limitazione delle richieste ripetute).</td><td>Art. 6.1.f GDPR — legittimo interesse del titolare.</td></tr>
+      <tr><td>Statistiche anonime sull’uso del sito.</td><td>Art. 6.1.a GDPR — consenso (revocabile in ogni momento).</td></tr>
+      <tr><td>Adempimento di obblighi di legge.</td><td>Art. 6.1.c GDPR.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>4. Natura del conferimento</h2>
+  <p>I campi contrassegnati con asterisco nel modulo sono necessari per poterti rispondere; senza di essi non possiamo gestire la richiesta. Telefono e allegati sono facoltativi.</p>
+
+  <h2>5. Destinatari dei dati</h2>
+  <p>I dati sono trattati da personale autorizzato dello studio e da fornitori che agiscono come responsabili del trattamento, limitatamente a quanto necessario: servizi di hosting del sito, servizio di posta elettronica / SMTP utilizzato per ricevere le richieste{hasAnalytics ? ', fornitore del servizio di statistiche (solo con consenso)' : ''}. I dati non vengono venduti né diffusi.</p>
+
+  <h2>6. Trasferimenti extra-UE</h2>
+  <p>{hasAnalytics && site.analytics.ga4 ? 'Il servizio di statistiche (Google Analytics 4), se attivato dal consenso, può comportare il trasferimento di dati verso gli Stati Uniti sulla base delle garanzie previste dal GDPR (decisione di adeguatezza / clausole contrattuali standard). ' : ''}Il sito non effettua altri trasferimenti verso Paesi extra-UE oltre a quelli eventualmente connessi ai fornitori di hosting e posta elettronica, che devono offrire garanzie adeguate ai sensi degli artt. 44 e ss. GDPR.</p>
+
+  <h2>7. Periodo di conservazione</h2>
+  <ul>
+    <li><strong>Richieste dal modulo:</strong> il tempo necessario a rispondere e comunque non oltre {l.inquiryRetentionMonths} mesi dalla ricezione, salvo che si instauri un rapporto con lo studio (in tal caso per la durata del rapporto e per i termini di legge).</li>
+    <li><strong>Log tecnici:</strong> per il tempo strettamente necessario alla sicurezza e al funzionamento del servizio.</li>
+    <li><strong>Preferenze cookie:</strong> fino a 6 mesi, poi la scelta ti viene richiesta nuovamente.</li>
+  </ul>
+
+  <h2>8. I tuoi diritti</h2>
+  <p>Puoi esercitare in ogni momento i diritti di accesso, rettifica, cancellazione, limitazione, portabilità e opposizione (artt. 15–22 GDPR) e revocare il consenso prestato, scrivendo a <Todo value={l.privacyEmail} label="email per richieste privacy" />. Hai inoltre diritto di proporre reclamo al Garante per la protezione dei dati personali (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener">www.garanteprivacy.it</a>).</p>
+
+  <h2>9. Link a servizi di terzi</h2>
+  <p>Il sito contiene link a Instagram, Google e WhatsApp. Cliccandoli lasci questo sito: si applicano le informative privacy dei rispettivi servizi. Il sito non incorpora contenuti di terzi e non carica font da servizi esterni.</p>
+
+  <h2>10. Minori</h2>
+  <p>Il sito non è rivolto a minori di 14 anni e non raccoglie consapevolmente dati di minori di tale età.</p>
+
+  <h2>11. Modifiche</h2>
+  <p>Questa informativa può essere aggiornata; la data dell’ultima revisione è indicata in alto. Per i cookie vedi la <a href="/cookie-policy/">Cookie Policy</a>.</p>
+</Legal>

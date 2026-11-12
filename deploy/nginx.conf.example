@@ -1,0 +1,33 @@
+# Esempio di reverse proxy davanti al server Node (porta 4321).
+# Aggiunge ciò che il server statico di Node non fa: compressione, cache lunga per gli asset
+# con hash, header di sicurezza e TLS. Con Cloudflare/Vercel/Netlify molte di queste cose sono già incluse.
+server {
+  listen 443 ssl http2;
+  server_name www.tuodominio.it;
+  # ssl_certificate / ssl_certificate_key …
+
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml application/xml;
+  # brotli on; brotli_types …;   (se il modulo è disponibile)
+
+  add_header X-Content-Type-Options "nosniff" always;
+  add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+  add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), interest-cohort=()" always;
+  add_header X-Frame-Options "SAMEORIGIN" always;
+  add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+  # Allegati del modulo: 5 × 8 MB + campi
+  client_max_body_size 45m;
+
+  location /_astro/ {
+    proxy_pass http://127.0.0.1:4321;
+    add_header Cache-Control "public, max-age=31536000, immutable";
+  }
+  location / {
+    proxy_pass http://127.0.0.1:4321;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    # con questo, imposta TRUST_PROXY=1 nell'ambiente di Node
+  }
+}

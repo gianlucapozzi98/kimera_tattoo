@@ -1,0 +1,21 @@
+---
+/** Logo: usa src/assets/brand/logo.* se presente, altrimenti wordmark tipografico provvisorio. */
+import { logo } from '../data/media';
+import { site } from '../config/site';
+interface Props { class?: string }
+const { class: klass = '' } = Astro.props;
+---
+{logo ? (
+  <img class={`logo-img ${klass}`} src={logo.src} width={logo.width} height={logo.height} alt={site.name} decoding="async" />
+) : (
+  <span class={`logo-word ${klass}`}>
+    <span class="logo-word__k display display--wide">KIMERA</span>{' '}
+    <span class="logo-word__t mono">Tattoo</span>
+  </span>
+)}
+<style>
+  .logo-img { height: 38px; width: auto; }
+  .logo-word { display: inline-flex; align-items: baseline; gap: .55em; line-height: 1; }
+  .logo-word__k { font-size: 1.55rem; letter-spacing: -.02em; }
+  .logo-word__t { font-size: .6rem; letter-spacing: .32em; color: var(--steel); }
+</style>

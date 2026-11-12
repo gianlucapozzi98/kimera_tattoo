@@ -1,0 +1,244 @@
+---
+import Arrow from './Arrow.astro';
+import { site, whatsappHref } from '../config/site';
+import { ARTIST_OPTIONS } from '../lib/inquiry';
+
+const wa = whatsappHref();
+const f = site.form;
+const accept = 'image/jpeg,image/png,image/webp,image/heic,image/heif,.jpg,.jpeg,.png,.webp,.heic,.heif';
+---
+
+<div class="request" id="request">
+  <form class="form" data-form method="post" action="/api/inquiry" enctype="multipart/form-data" novalidate aria-labelledby="form-title">
+    <div class="form__head">
+      <h3 class="form__title display" id="form-title">Richiedi un appuntamento</h3>
+      <p class="mono muted">I campi con * sono obbligatori</p>
+    </div>
+
+    <div class="form__summary" data-summary role="alert" tabindex="-1" hidden>
+      <p><b>Controlla questi campi:</b></p>
+      <ul data-summary-list></ul>
+    </div>
+
+    <div class="grid2">
+      <div class="field" data-field="name">
+        <label for="f-name">Nome *</label>
+        <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="80" aria-describedby="e-name" />
+        <p class="field__err" id="e-name" data-err></p>
+      </div>
+      <div class="field" data-field="email">
+        <label for="f-email">Email *</label>
+        <input id="f-email" name="email" type="email" inputmode="email" autocomplete="email" required maxlength="160" aria-describedby="e-email" />
+        <p class="field__err" id="e-email" data-err></p>
+      </div>
+    </div>
+
+    <div class="field" data-field="phone">
+      <label for="f-phone">Telefono <span class="muted">(facoltativo)</span></label>
+      <input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" aria-describedby="e-phone" />
+      <p class="field__err" id="e-phone" data-err></p>
+    </div>
+
+    <fieldset class="field seg" data-field="artist" aria-describedby="e-artist">
+      <legend>Artista desiderato *</legend>
+      <div class="seg__row">
+        {ARTIST_OPTIONS.map((o) => (
+          <label class="seg__opt">
+            <input type="radio" name="artist" value={o.value} required />
+            <span>{o.label}</span>
+          </label>
+        ))}
+      </div>
+      <p class="field__err" id="e-artist" data-err></p>
+    </fieldset>
+
+    <div class="grid3">
+      <div class="field" data-field="type">
+        <label for="f-type">Tipologia *</label>
+        <div class="select"><select id="f-type" name="type" required aria-describedby="e-type">
+          <option value="" selected disabled>Seleziona…</option>
+          {f.types.map((o) => <option value={o.value}>{o.label}</option>)}
+        </select></div>
+        <p class="field__err" id="e-type" data-err></p>
+      </div>
+      <div class="field" data-field="size">
+        <label for="f-size">Dimensione indicativa *</label>
+        <div class="select"><select id="f-size" name="size" required aria-describedby="e-size">
+          <option value="" selected disabled>Seleziona…</option>
+          {f.sizes.map((o) => <option value={o.value}>{o.label}</option>)}
+        </select></div>
+        <p class="field__err" id="e-size" data-err></p>
+      </div>
+      <div class="field" data-field="area">
+        <label for="f-area">Zona del corpo *</label>
+        <div class="select"><select id="f-area" name="area" required aria-describedby="e-area">
+          <option value="" selected disabled>Seleziona…</option>
+          {f.bodyAreas.map((o) => <option value={o.value}>{o.label}</option>)}
+        </select></div>
+        <p class="field__err" id="e-area" data-err></p>
+      </div>
+    </div>
+
+    <div class="field" data-field="message">
+      <label for="f-message">Racconta la tua idea *</label>
+      <textarea id="f-message" name="message" rows="5" required maxlength={f.maxMessageLength} aria-describedby="e-message h-message" placeholder="Soggetto, stile che ti ispira, significato, eventuali riferimenti…"></textarea>
+      <p class="field__hint mono muted" id="h-message"><span data-count>0</span> / {f.maxMessageLength}</p>
+      <p class="field__err" id="e-message" data-err></p>
+    </div>
+
+    <div class="field" data-field="files">
+      <span class="label" id="l-files">Immagini di riferimento <span class="muted">(facoltativo)</span></span>
+      <div class="drop" data-drop>
+        <input class="sr-only" id="f-files" name="files" type="file" accept={accept} multiple aria-labelledby="l-files" aria-describedby="e-files h-files" data-files-input />
+        <label class="drop__label" for="f-files">
+          <span class="drop__t">Trascina qui le immagini <span class="muted">oppure</span> <u>scegli dal dispositivo</u></span>
+          <span class="drop__h mono muted" id="h-files">Fino a {f.maxFiles} file · JPG, PNG, WebP, HEIC · max {f.maxFileMB} MB ciascuno</span>
+        </label>
+        <ul class="drop__list" data-file-list aria-live="polite"></ul>
+      </div>
+      <p class="field__err" id="e-files" data-err></p>
+    </div>
+
+    <!-- anti-bot: i veri utenti non vedono né compilano questo campo -->
+    <div class="hp" aria-hidden="true">
+      <label>Non compilare questo campo<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+    </div>
+    <input type="hidden" name="ts" value="" data-ts />
+
+    <div class="field field--consent" data-field="consent">
+      <label class="check">
+        <input type="checkbox" name="consent" required aria-describedby="e-consent" />
+        <span class="check__box" aria-hidden="true"></span>
+        <span>Ho letto l’<a class="link-u" href="/privacy/" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei dati per essere ricontattato. Non inserirò dati relativi alla mia salute. *</span>
+      </label>
+      <p class="field__err" id="e-consent" data-err></p>
+    </div>
+
+    <div class="form__foot">
+      <button class="btn btn--solid form__submit" type="submit" data-submit>
+        <span data-submit-label>Invia la richiesta</span><Arrow />
+        <span class="form__bar" data-bar aria-hidden="true"></span>
+      </button>
+      <p class="form__status mono" data-status role="status" aria-live="polite"></p>
+    </div>
+
+    <div class="form__error" data-error hidden>
+      <p data-error-text></p>
+      <p class="form__alt">
+        In alternativa scrivici su
+        {wa ? <a class="link-u" href={wa} target="_blank" rel="noopener">WhatsApp</a> : null}{wa ? ' o ' : ' '}
+        <a class="link-u" href={site.social.instagram.dm} target="_blank" rel="noopener">Instagram</a>.
+      </p>
+    </div>
+  </form>
+
+  <div class="form__done" data-done hidden tabindex="-1">
+    <p class="mono muted">Richiesta inviata</p>
+    <h3 class="display display--wide form__done-t">Grazie<span data-done-name></span>.</h3>
+    <p>La tua richiesta è arrivata allo studio: ti ricontatteremo all’indirizzo email che hai indicato.</p>
+    <button class="btn" type="button" data-again><span>Invia un’altra richiesta</span></button>
+  </div>
+</div>
+
+<style>
+  .request { position: relative; }
+  .form { display: grid; gap: 1.6rem; }
+  .form__head { display: grid; gap: 0.4rem; }
+  .form__title { font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 0.95; }
+  .grid2 { display: grid; gap: 1.6rem; }
+  .grid3 { display: grid; gap: 1.6rem; }
+  .field { display: grid; gap: 0.5rem; border: 0; padding: 0; margin: 0; min-width: 0; }
+  .field label, .field legend, .label {
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bone-2);
+    padding: 0;
+  }
+  .field input[type='text'], .field input[type='email'], .field input[type='tel'], .field textarea, .field select {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.8rem 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-2);
+    border-radius: 0;
+    color: var(--bone);
+    font-size: 1.05rem;
+    outline: none;
+    transition: border-color 0.4s var(--ease-out);
+  }
+  .field textarea { resize: vertical; min-height: 130px; line-height: 1.5; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--steel-2); }
+  .field input:focus-visible, .field textarea:focus-visible, .field select:focus-visible { border-bottom-color: var(--bone); box-shadow: 0 1px 0 var(--bone); outline: none; }
+  .select { position: relative; }
+  .select::after { content: ''; position: absolute; right: 4px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--bone); border-bottom: 1.5px solid var(--bone); transform: translateY(-70%) rotate(45deg); pointer-events: none; }
+  .select select { appearance: none; -webkit-appearance: none; padding-right: 1.8rem; cursor: pointer; }
+  .select select:invalid { color: var(--steel); }
+  .select option { background: var(--ink-2); color: var(--bone); }
+  .field__hint { justify-self: end; }
+  .field__err { min-height: 0; color: #ff8a7a; font-size: 0.85rem; line-height: 1.35; }
+  .field__err:empty { display: none; }
+  .field.is-invalid input[type='text'], .field.is-invalid input[type='email'], .field.is-invalid input[type='tel'], .field.is-invalid textarea, .field.is-invalid select { border-bottom-color: #ff8a7a; }
+
+  /* artista: controllo segmentato */
+  .seg__row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  .seg__opt { position: relative; display: grid; place-items: center; min-height: 52px; border: 1px solid var(--line-2); cursor: pointer; text-align: center; padding: 0 0.6rem; transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out), border-color 0.4s; }
+  .seg__opt input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+  .seg__opt span { font-family: var(--f-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+  .seg__opt:hover { border-color: var(--bone); }
+  .seg__opt:has(input:checked) { background: var(--bone); color: var(--ink-0); border-color: var(--bone); }
+  .seg__opt:has(input:focus-visible) { outline: 2px solid var(--bone); outline-offset: 3px; }
+  .field.is-invalid .seg__opt { border-color: #ff8a7a; }
+
+  /* upload */
+  .drop { position: relative; border: 1px dashed var(--line-2); transition: border-color 0.3s, background-color 0.3s; }
+  .drop.is-over { border-color: var(--bone); background: rgb(236 232 223 / 0.05); }
+  .drop:focus-within { border-color: var(--bone); }
+  .drop__label { display: grid; gap: 0.4rem; padding: 1.4rem; cursor: pointer; text-transform: none; letter-spacing: 0; font-family: var(--f-display); font-size: 1rem; font-weight: 400; color: var(--bone); }
+  .drop__h { text-transform: uppercase; }
+  .drop__list { display: flex; flex-wrap: wrap; gap: 0.6rem; padding: 0 1rem 1rem; }
+  .drop__list:empty { display: none; }
+  .fchip { position: relative; display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 0.7rem; padding: 0.4rem 0.5rem; border: 1px solid var(--line-2); max-width: 100%; }
+  .fchip__th { width: 52px; height: 52px; display: grid; place-items: center; background: var(--ink-3); overflow: hidden; font-size: 0.6rem; }
+  .fchip__th img { width: 100%; height: 100%; object-fit: cover; }
+  .fchip__n { font-size: 0.8rem; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 14ch; }
+  .fchip__x { width: 44px; height: 44px; display: grid; place-items: center; font-size: 1.1rem; }
+  .fchip__x:hover { color: var(--accent); }
+
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  /* consenso */
+  .check { display: grid; grid-template-columns: 24px 1fr; gap: 0.9rem; align-items: start; cursor: pointer; text-transform: none; letter-spacing: 0; font-family: var(--f-display); font-size: 0.9rem; font-weight: 400; color: var(--bone-2); line-height: 1.45; }
+  .check input { position: absolute; opacity: 0; width: 24px; height: 24px; margin: 0; cursor: pointer; }
+  .check__box { width: 22px; height: 22px; border: 1px solid var(--bone); display: grid; place-items: center; margin-top: 1px; transition: background-color 0.3s; }
+  .check__box::after { content: ''; width: 10px; height: 6px; border-left: 2px solid var(--ink-0); border-bottom: 2px solid var(--ink-0); transform: rotate(-45deg) scale(0); margin-top: -2px; transition: transform 0.3s var(--ease-out); }
+  .check input:checked + .check__box { background: var(--bone); }
+  .check input:checked + .check__box::after { transform: rotate(-45deg) scale(1); }
+  .check input:focus-visible + .check__box { outline: 2px solid var(--bone); outline-offset: 3px; }
+  .field.is-invalid .check__box { border-color: #ff8a7a; }
+
+  .form__summary { padding: 1rem 1.2rem; border: 1px solid #ff8a7a; background: rgb(255 138 122 / 0.07); color: var(--bone); }
+  .form__summary ul { margin-top: 0.5rem; display: grid; gap: 0.2rem; }
+  .form__summary a { text-decoration: underline; }
+  .form__summary:focus { outline: 2px solid var(--bone); outline-offset: 3px; }
+  .form__foot { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+  .form__submit { min-width: 260px; justify-content: space-between; }
+  .form__submit[disabled] { opacity: 0.8; cursor: progress; }
+  .form__bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: var(--accent); transform: scaleX(0); transform-origin: left; }
+  .form__status { color: var(--bone-2); }
+  .form__error { padding: 1rem 1.2rem; border: 1px solid #ff8a7a; background: rgb(255 138 122 / 0.07); display: grid; gap: 0.4rem; }
+  .form__error[hidden], .form__summary[hidden], .form__done[hidden] { display: none; }
+  .form__alt { color: var(--bone-2); font-size: 0.95rem; }
+
+  .form__done { display: grid; gap: 1.2rem; align-content: center; min-height: 420px; }
+  .form__done-t { font-size: clamp(3rem, 8vw, 6rem); }
+  .form__done:focus { outline: none; }
+
+  @media (min-width: 700px) {
+    .grid2 { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .grid3 { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  }
+</style>

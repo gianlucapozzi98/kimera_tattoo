@@ -1,0 +1,73 @@
+---
+import Split from './Split.astro';
+import Arrow from './Arrow.astro';
+import ContactForm from './ContactForm.astro';
+import { contact } from '../data/copy';
+import { site, whatsappHref } from '../config/site';
+
+const wa = whatsappHref();
+const addr = site.contact.address;
+---
+
+<section class="contact" id="contact" data-contact aria-labelledby="contact-title">
+  <div class="wrap contact__grid">
+    <div class="contact__lead">
+      <p class="mono muted" data-reveal="fade">(07) — Contact</p>
+      <Split as="h2" id="contact-title" class="display display--wide contact__title" lines={contact.title} lineClass={['', 'is-outline', '']} />
+      <p class="contact__p" data-reveal>{contact.lead}</p>
+
+      <div class="contact__ctas" data-reveal>
+        {wa ? (
+          <a class="btn btn--solid" href={wa} target="_blank" rel="noopener" data-track="whatsapp_click"><span>Scrivici su WhatsApp</span><Arrow /></a>
+        ) : (
+          <a class="btn btn--solid" href={site.social.instagram.dm} target="_blank" rel="noopener" data-track="instagram_dm_click"><span>Scrivici su Instagram</span><Arrow /></a>
+        )}
+        <a class="btn" href={site.social.instagram.url} target="_blank" rel="noopener" data-track="instagram_click" data-track-label="studio"><span>@{site.social.instagram.handle}</span><Arrow /></a>
+        <a class="btn" href={site.google.url} target="_blank" rel="noopener" data-track="google_click"><span>Scheda Google</span><Arrow /></a>
+      </div>
+
+      <dl class="contact__info" data-reveal>
+        {site.contact.email && (<div><dt class="mono muted">Email</dt><dd><a class="link-u" href={`mailto:${site.contact.email}`}>{site.contact.email}</a></dd></div>)}
+        {site.contact.phone && (<div><dt class="mono muted">Telefono</dt><dd><a class="link-u" href={`tel:${site.contact.phone.replace(/\s/g, '')}`}>{site.contact.phone}</a></dd></div>)}
+        {addr && (<div><dt class="mono muted">Studio</dt><dd>{addr.street}, {addr.zip} {addr.city}</dd></div>)}
+        <div><dt class="mono muted">Instagram</dt><dd>
+          <a class="link-u" href={site.social.instagram.url} target="_blank" rel="noopener">@{site.social.instagram.handle}</a>
+        </dd></div>
+      </dl>
+
+      <ol class="steps">
+        {contact.steps.map((s) => (
+          <li class="step" data-reveal>
+            <span class="step__n mono muted">{s.n}</span>
+            <span><b>{s.t}</b><span class="step__d">{s.d}</span></span>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="contact__form" data-reveal>
+      <ContactForm />
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact { position: relative; padding-block: clamp(5rem, 12vh, 9rem); background: var(--ink-2); border-top: 1px solid var(--line); overflow: clip; }
+  .contact__grid { display: grid; gap: 4rem; }
+  .contact__lead { display: grid; gap: 1.6rem; align-content: start; min-width: 0; }
+  :global(.contact__title) { font-size: clamp(2.4rem, 10.4vw, 4.6rem); line-height: 0.9; font-stretch: 100%; font-weight: 900; letter-spacing: -0.035em; }
+  .contact__p { max-width: 44ch; color: var(--bone-2); font-size: 1.1rem; }
+  .contact__ctas { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .contact__info { display: grid; gap: 1rem; padding-block: 1.4rem; border-block: 1px solid var(--line-2); }
+  .contact__info dd { margin: 0.2rem 0 0; font-size: 1.1rem; }
+  .steps { display: grid; gap: 0.9rem; }
+  .step { display: grid; grid-template-columns: 2.6rem 1fr; gap: 0.6rem; align-items: baseline; }
+  .step b { display: block; }
+  .step__d { display: block; color: var(--bone-2); font-size: 0.95rem; }
+  .contact__form { padding: clamp(1.4rem, 3vw, 2.8rem); border: 1px solid var(--line-2); background: var(--ink-1); }
+  @media (min-width: 1000px) {
+    .contact__grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(2rem, 5vw, 6rem); align-items: start; }
+    :global(.contact__title) { font-size: clamp(3rem, 5.5vw, 7.4rem); }
+    .contact__lead { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+  }
+</style>

@@ -1,0 +1,353 @@
+---
+import Photo from './Photo.astro';
+import Split from './Split.astro';
+import Marks from './Marks.astro';
+import Seal from './Seal.astro';
+import Arrow from './Arrow.astro';
+import Logo from './Logo.astro';
+import { heroImage } from '../data/media';
+import { hero } from '../data/copy';
+
+const img = heroImage();
+---
+
+<section class="hero" id="home" data-hero aria-labelledby="hero-title">
+  <div class="hero__media" data-hero-media>
+    <div class="hero__img" data-hero-img>
+      <Photo
+        image={img.image}
+        alt={img.alt}
+        priority
+        sizes="(min-width: 900px) 62vw, 100vw"
+        widths={[640, 960, 1400, 2000]}
+        plateKind="Foto hero da inserire"
+        plateSlot="src/assets/hero/hero.jpg"
+        plateVariant={1}
+        plateN="00"
+      />
+    </div>
+    <div class="hero__shade" aria-hidden="true"></div>
+    <div class="grain-local" aria-hidden="true"></div>
+    <Marks size={18} inset="92px 18px 18px 18px" />
+    <p class="hero__fig mono" data-hero-in aria-hidden="true">Fig. 00 — Cover</p>
+  </div>
+
+  <p class="hero__tag mono" data-hero-in aria-hidden="true">
+    <span>Kimera Tattoo</span><span>Sink × Cromo</span>
+  </p>
+
+  <div class="hero__title">
+    <Split as="h1" id="hero-title" lines={hero.lines} lineClass={['hl hl--a', 'hl hl--b', 'hl hl--c']} />
+  </div>
+
+  <div class="hero__seal" data-hero-in data-hero-seal aria-hidden="true">
+    <Seal id="hero" />
+  </div>
+
+  <div class="hero__foot">
+    <div class="hero__copy" data-hero-in>
+      <p class="hero__sub">{hero.sub}</p>
+      <div class="hero__cta">
+        <a class="btn btn--solid" href="#showcase" data-track="cta_hero_explore" data-scroll-to="#showcase">
+          <span>Esplora i lavori</span><Arrow dir="d" />
+        </a>
+        <a class="btn" href="#contact" data-track="cta_hero_contact" data-scroll-to="#contact">
+          <span>Contatta lo studio</span><Arrow />
+        </a>
+      </div>
+    </div>
+    <a class="hero__scroll mono" href="#manifesto" data-hero-in data-scroll-to="#manifesto" aria-label="Scroll: scorri verso il basso">
+      <span>Scroll</span>
+      <i aria-hidden="true"></i>
+    </a>
+  </div>
+
+  <p class="hero__vert mono" data-hero-in="fade" aria-hidden="true">Skin — Story — Art</p>
+
+  <div class="intro" data-intro aria-hidden="true">
+    <div class="intro__logo" data-intro-logo><Logo /></div>
+    <span class="intro__bar" data-intro-bar></span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 620px;
+    max-height: 1400px;
+    overflow: clip;
+    background: var(--ink-1);
+  }
+
+  /* — media — */
+  .hero__media {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(64%, 1100px);
+    overflow: hidden;
+    background: var(--ink-2);
+  }
+  .hero__img {
+    position: absolute;
+    inset: -8% -3%;
+    will-change: transform;
+  }
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, rgb(10 10 11 / 0.92) 0%, rgb(10 10 11 / 0.35) 38%, transparent 70%),
+      linear-gradient(0deg, rgb(10 10 11 / 0.75) 0%, transparent 38%),
+      linear-gradient(180deg, rgb(10 10 11 / 0.55) 0%, transparent 22%);
+    pointer-events: none;
+  }
+  .hero__fig {
+    position: absolute;
+    right: 40px;
+    top: calc(var(--header-h) + 34px);
+    color: var(--bone-2);
+    z-index: 2;
+  }
+
+  .hero__tag {
+    position: absolute;
+    top: calc(var(--header-h) + 14px);
+    left: var(--pad);
+    z-index: 3;
+    display: flex;
+    gap: 1.4em;
+    color: var(--steel);
+  }
+  .hero__tag span + span::before {
+    content: '/';
+    margin-right: 1.4em;
+    color: var(--steel-2);
+  }
+
+  /* — titolo — */
+  .hero__title {
+    position: absolute;
+    left: var(--pad);
+    bottom: clamp(9.5rem, 24vh, 14rem);
+    z-index: 4;
+    font-family: var(--f-display);
+    font-size: clamp(3rem, 10.4vw, 14rem);
+    line-height: 0.86;
+    pointer-events: none;
+  }
+  .hero__title :global(h1) {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+  }
+  .hero__title :global(.hl) {
+    display: block;
+    white-space: nowrap;
+  }
+  .hero__title :global(.hl--a) {
+    font-weight: 900;
+    font-stretch: 118%;
+    letter-spacing: -0.045em;
+    text-transform: uppercase;
+  }
+  .hero__title :global(.hl--b) {
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 1.18em;
+    line-height: 0.78;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    margin-left: 0.5em;
+    color: var(--bone);
+  }
+  .hero__title :global(.hl--b .sw) {
+    padding-bottom: 0.24em;
+    margin-bottom: -0.24em;
+    padding-right: 0.06em;
+  }
+  .hero__title :global(.hl--c) {
+    font-weight: 800;
+    font-stretch: 62%;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    font-size: 1.12em;
+    line-height: 0.82;
+    margin-left: 0.04em;
+    color: transparent;
+    -webkit-text-stroke: clamp(1px, 0.12vw, 2px) var(--bone);
+  }
+
+  .hero__seal {
+    position: absolute;
+    z-index: 5;
+    right: 7%;
+    top: 55%;
+    width: 124px;
+    height: 124px;
+    color: var(--bone);
+    background: var(--ink-1);
+    border-radius: 50%;
+    padding: 4px;
+  }
+
+  .hero__foot {
+    position: absolute;
+    z-index: 4;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: clamp(1.4rem, 4vh, 2.6rem);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .hero__sub {
+    max-width: 30ch;
+    margin-bottom: 1.2rem;
+    color: var(--bone-2);
+    font-size: clamp(0.95rem, 0.9rem + 0.25vw, 1.1rem);
+    line-height: 1.45;
+  }
+  .hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .hero__scroll {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--bone-2);
+    min-height: 44px;
+  }
+  .hero__scroll i {
+    position: relative;
+    width: 1px;
+    height: 64px;
+    background: var(--line-2);
+    overflow: hidden;
+  }
+  .hero__scroll i::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -100%;
+    width: 1px;
+    height: 100%;
+    background: var(--bone);
+    animation: scroll-line 2.2s var(--ease-io) infinite;
+  }
+  @keyframes scroll-line {
+    0% { top: -100%; }
+    60%, 100% { top: 100%; }
+  }
+  .hero__vert {
+    position: absolute;
+    z-index: 3;
+    right: 14px;
+    top: 50%;
+    writing-mode: vertical-rl;
+    transform: translateY(-50%) rotate(180deg);
+    color: var(--steel);
+    letter-spacing: 0.4em;
+  }
+
+  /* — intro cinematografica — */
+  .intro {
+    display: none;
+  }
+  :global(.anim:not(.anim-fail)) .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: grid;
+    place-items: center;
+    background: var(--ink-0);
+  }
+  .intro__logo {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+  .intro__bar {
+    position: absolute;
+    left: var(--pad);
+    right: var(--pad);
+    bottom: 12vh;
+    height: 1px;
+    background: var(--bone);
+    transform: scaleX(0);
+    transform-origin: left;
+    opacity: 0.7;
+  }
+
+  /* stati iniziali (solo con JS + motion consentito) */
+  :global(.anim:not(.anim-fail)) .hero__media {
+    clip-path: inset(100% 0 0 0);
+  }
+  :global(.anim:not(.anim-fail)) [data-hero-in] {
+    opacity: 0;
+  }
+  :global(.anim:not(.anim-fail)) [data-header] {
+    opacity: 0;
+  }
+
+  /* — mobile: composizione propria — */
+  @media (max-width: 899px) {
+    .hero {
+      height: auto;
+      min-height: 100svh;
+      max-height: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero__media {
+      position: relative;
+      width: 100%;
+      height: 58svh;
+      min-height: 360px;
+      flex: none;
+    }
+    .hero__shade {
+      background:
+        linear-gradient(0deg, rgb(10 10 11 / 1) 0%, rgb(10 10 11 / 0.55) 30%, transparent 62%),
+        linear-gradient(180deg, rgb(10 10 11 / 0.6) 0%, transparent 24%);
+    }
+    .hero__fig { right: 16px; bottom: 16px; display: none; }
+    .hero__tag { top: calc(var(--header-h) + 6px); }
+    .hero__title {
+      position: relative;
+      left: auto;
+      bottom: auto;
+      margin: -8.6rem 0 0 var(--pad);
+      font-size: clamp(2.6rem, 14vw, 8rem);
+    }
+    .hero__title :global(.hl--a) { font-stretch: 100%; letter-spacing: -0.04em; }
+    .hero__title :global(.hl--c) { font-size: 1.18em; }
+    .hero__seal {
+      right: var(--pad);
+      top: calc(58svh - 52px);
+      width: 92px;
+      height: 92px;
+    }
+    .hero__foot {
+      position: relative;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      margin: 1.6rem var(--pad) 2rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.6rem;
+    }
+    .hero__sub { max-width: 34ch; }
+    .hero__vert { display: none; }
+    .hero__scroll { display: none; }
+  }
+  @media (max-width: 899px) and (min-height: 820px) {
+    .hero__media { height: 54svh; }
+  }
+</style>

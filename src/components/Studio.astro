@@ -1,0 +1,126 @@
+---
+import Photo from './Photo.astro';
+import Split from './Split.astro';
+import Marks from './Marks.astro';
+import Arrow from './Arrow.astro';
+import { studioPhotos } from '../data/media';
+import { studio } from '../data/copy';
+import { site } from '../config/site';
+
+const photos = studioPhotos();
+const [cover, ...rest] = photos;
+const gallery = rest.slice(0, 2);
+const addr = site.contact.address;
+---
+
+<section class="studio" id="studio" data-studio aria-labelledby="studio-title">
+  <div class="studio__cover" data-cover>
+    <div class="studio__bg" data-bg>
+      <div class="studio__par" data-par>
+        <Photo
+          image={cover.image}
+          alt={cover.alt}
+          sizes="100vw"
+          widths={[900, 1400, 2000, 2800]}
+          plateQuiet
+          plateVariant={2}
+        />
+      </div>
+    </div>
+    <div class="studio__shade" aria-hidden="true"></div>
+    <div class="grain-local" aria-hidden="true"></div>
+    <div class="studio__over wrap">
+      <p class="mono" data-reveal="fade">(05) — {studio.kicker}</p>
+      <Split as="h2" id="studio-title" class="display display--wide studio__title" lines={studio.title} noAuto />
+      <p class="studio__intro" data-reveal>{studio.intro}</p>
+      {cover.placeholder && <p class="studio__slot mono" data-reveal="fade">Foto da inserire · {cover.slot}</p>}
+    </div>
+    <Marks size={20} inset="calc(var(--header-h) + 14px) 18px 18px 18px" />
+  </div>
+
+  <div class="wrap studio__pillars">
+    <ol>
+      {studio.pillars.map((p) => (
+        <li class="pillar" data-reveal>
+          <span class="pillar__n mono muted">{p.n}</span>
+          <h3 class="pillar__t display">{p.t}</h3>
+          <p class="pillar__d">{p.d}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <div class="wrap studio__gallery">
+    {gallery.map((g, i) => (
+      <figure class={`g g--${i + 1}`} style={`--r:${g.ratio.toFixed(3)}`} data-clip={i % 2 ? 'left' : 'right'}>
+        <div class="g__in" data-clip-inner>
+          <Photo image={g.image} alt={g.alt} sizes="(min-width: 900px) 40vw, 92vw" widths={[640, 960, 1400, 2000]} plateQuiet plateVariant={i} />
+        </div>
+        <Marks size={14} inset={10} />
+        {g.placeholder && <figcaption class="g__slot mono">Foto da inserire · {g.slot}</figcaption>}
+      </figure>
+    ))}
+
+    <div class="where" data-reveal>
+      <p class="mono muted">Dove</p>
+      {addr ? (
+        <address class="where__addr">{addr.street}<br />{addr.zip} {addr.city}{addr.province ? ` (${addr.province})` : ''}</address>
+      ) : (
+        <p class="where__addr">Posizione, recensioni e informazioni aggiornate sono sulla scheda Google dello studio.</p>
+      )}
+      {site.contact.hours && <ul class="where__hours mono">{site.contact.hours.map((h) => <li>{h}</li>)}</ul>}
+      <a class="btn" href={site.google.url} target="_blank" rel="noopener" data-track="google_click"><span>Apri la scheda Google</span><Arrow /></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .studio { position: relative; background: var(--ink-1); }
+  .studio__cover { position: relative; min-height: 100svh; display: grid; align-items: end; overflow: hidden; }
+  .studio__bg { position: absolute; inset: 0; }
+  .studio__par { position: absolute; inset: -8% 0; will-change: transform; }
+  .studio__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgb(5 5 5 / 0.92) 0%, rgb(5 5 5 / 0.4) 50%, rgb(5 5 5 / 0.55) 100%);
+    pointer-events: none;
+  }
+  .studio__over { position: relative; z-index: 3; display: grid; gap: 1.4rem; padding-block: calc(var(--header-h) + 4rem) clamp(3rem, 9vh, 6rem); }
+  :global(.studio__title) { font-size: clamp(2.4rem, 8.6vw, 10.5rem); line-height: 0.88; }
+  .studio__intro { max-width: 44ch; color: var(--bone-2); font-size: 1.05rem; }
+  .studio__slot, .g__slot { color: var(--accent-text); word-break: break-all; }
+
+  .studio__pillars { padding-block: clamp(4rem, 10vh, 8rem); }
+  .pillar {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: 0.4rem 1rem;
+    padding-block: 1.6rem;
+    border-top: 1px solid var(--line-2);
+    transition: padding-left 0.6s var(--ease-out), background-color 0.6s;
+  }
+  .pillar:last-child { border-bottom: 1px solid var(--line-2); }
+  .pillar__n { padding-top: 0.6em; }
+  .pillar__t { font-size: clamp(2.2rem, 7vw, 5rem); line-height: 0.95; }
+  .pillar__d { grid-column: 2; max-width: 46ch; color: var(--bone-2); }
+  .pillar:hover { padding-left: 1.2rem; }
+
+  .studio__gallery { display: grid; gap: 2rem; padding-bottom: clamp(4rem, 10vh, 8rem); align-items: start; }
+  .g { position: relative; margin: 0; aspect-ratio: clamp(0.7, var(--r), 1.7); background: var(--ink-3); overflow: hidden; }
+  .g__in { position: absolute; inset: 0; }
+  .g__slot { position: absolute; left: 14px; right: 14px; bottom: 12px; z-index: 3; }
+  .where { display: grid; gap: 1rem; align-content: start; padding: 1.6rem; border: 1px solid var(--line-2); max-width: 420px; }
+  .where__addr { font-style: normal; color: var(--bone-2); }
+  .where__hours { color: var(--bone-2); display: grid; gap: 0.2rem; }
+  .where .btn { justify-self: start; }
+
+  @media (min-width: 900px) {
+    .studio__pillars ol { display: grid; }
+    .pillar { grid-template-columns: 5rem minmax(0, 5fr) minmax(0, 4fr); align-items: baseline; padding-block: 2.2rem; }
+    .pillar__d { grid-column: 3; }
+    .studio__gallery { grid-template-columns: repeat(12, 1fr); gap: var(--gap); }
+    .g--1 { grid-column: 1 / span 6; }
+    .g--2 { grid-column: 8 / span 5; margin-top: 12vh; }
+    .where { grid-column: 1 / span 4; grid-row: 2; margin-top: -6vh; }
+  }
+</style>

@@ -1,0 +1,70 @@
+---
+import { site } from '../config/site';
+const hasProvider = !!(site.analytics.ga4 || site.analytics.plausibleDomain);
+const lead = hasProvider
+  ? 'Usiamo strumenti tecnici necessari al funzionamento del sito. Con il tuo consenso attiviamo anche statistiche anonime per capire come viene usato.'
+  : 'Usiamo solo strumenti tecnici necessari al funzionamento del sito. Eventuali statistiche anonime verrebbero attivate solo con il tuo consenso.';
+---
+
+<div class="cookie" data-cookie hidden role="dialog" aria-modal="false" aria-labelledby="cookie-title" aria-describedby="cookie-desc">
+  <div data-cookie-main>
+    <p class="cookie__t display" id="cookie-title">Cookie</p>
+    <p class="cookie__d" id="cookie-desc">{lead} Dettagli nella <a class="link-u" href="/cookie-policy/">Cookie Policy</a>.</p>
+    <div class="cookie__btns">
+      <button class="btn btn--sm" type="button" data-cookie-reject>Rifiuta</button>
+      <button class="btn btn--sm" type="button" data-cookie-custom>Personalizza</button>
+      <button class="btn btn--sm" type="button" data-cookie-accept>Accetta</button>
+    </div>
+  </div>
+
+  <div data-cookie-prefs hidden>
+    <p class="cookie__t display">Preferenze</p>
+    <ul class="cookie__list">
+      <li>
+        <span><b>Necessari</b><span class="muted"> — sempre attivi: ricordano le tue scelte e fanno funzionare il modulo.</span></span>
+        <span class="mono muted">Attivi</span>
+      </li>
+      <li>
+        <label class="cookie__row" for="ck-an">
+          <span><b>Statistiche</b><span class="muted"> — misurazione anonima delle visite{hasProvider ? '' : ' (al momento non configurata)'}.</span></span>
+          <input id="ck-an" type="checkbox" data-cookie-analytics />
+        </label>
+      </li>
+    </ul>
+    <div class="cookie__btns">
+      <button class="btn btn--sm btn--solid" type="button" data-cookie-save>Salva le preferenze</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .cookie {
+    position: fixed;
+    z-index: 250;
+    left: max(12px, env(safe-area-inset-left));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    width: min(440px, calc(100vw - 24px));
+    padding: 1.2rem 1.3rem 1.3rem;
+    background: var(--ink-0);
+    border: 1px solid var(--line-2);
+    box-shadow: 0 30px 80px rgb(0 0 0 / 0.7);
+  }
+  .cookie[hidden] { display: none; }
+  .cookie__t { font-size: 1.6rem; margin-bottom: 0.6rem; }
+  .cookie__d { color: var(--bone-2); font-size: 0.9rem; line-height: 1.5; margin-bottom: 1rem; }
+  .cookie__btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .cookie__btns .btn { flex: 1 1 auto; justify-content: center; }
+  .cookie__list { display: grid; gap: 0.8rem; margin-bottom: 1rem; font-size: 0.9rem; }
+  .cookie__list li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-block: 0.7rem; border-top: 1px solid var(--line); }
+  .cookie__row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: 100%; cursor: pointer; }
+  .cookie__row input { width: 22px; height: 22px; accent-color: var(--bone); flex: none; }
+  .muted { color: var(--steel); }
+  @media (min-width: 900px) {
+    .cookie { left: auto; right: max(16px, env(safe-area-inset-right)); bottom: max(16px, env(safe-area-inset-bottom)); }
+  }
+  @media (max-width: 520px) {
+    .cookie { padding: 0.9rem 1rem 1rem; }
+    .cookie__t { font-size: 1.15rem; margin-bottom: 0.3rem; }
+    .cookie__d { font-size: 0.8rem; margin-bottom: 0.7rem; }
+  }
+</style>

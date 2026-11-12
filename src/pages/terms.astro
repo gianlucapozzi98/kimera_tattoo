@@ -1,0 +1,48 @@
+---
+import Legal from '../layouts/Legal.astro';
+import Todo from '../components/Todo.astro';
+import { site } from '../config/site';
+const l = site.legal;
+---
+<Legal
+  title="Termini di utilizzo"
+  kicker="Condizioni d’uso del sito web"
+  path="/terms/"
+  description="Termini e condizioni di utilizzo del sito di Kimera Tattoo: uso dei contenuti, richieste di appuntamento, proprietà intellettuale."
+>
+  <p class="note">Bozza redatta sulla base delle funzionalità reali del sito: va verificata da un consulente legale e completata con i dati del titolare.</p>
+
+  <h2>1. Oggetto</h2>
+  <p>Questi termini regolano l’uso del sito di <strong>{site.name}</strong>, gestito da <strong><Todo value={l.companyName} label="ragione sociale" /></strong> (P.IVA <Todo value={l.vatNumber} label="partita IVA" />). Navigando sul sito o inviando il modulo accetti i presenti termini.</p>
+
+  <h2>2. Natura delle informazioni e richieste di appuntamento</h2>
+  <p>Il sito ha scopo informativo e presenta il lavoro dello studio e dei suoi artisti. Non costituisce offerta al pubblico. L’invio del modulo di richiesta è una <strong>manifestazione di interesse</strong>: non equivale a una prenotazione e non vincola né te né lo studio finché l’appuntamento non viene confermato dallo studio. Condizioni economiche, tempi e modalità del servizio vengono definiti direttamente con lo studio.</p>
+
+  <h2>3. Proprietà intellettuale</h2>
+  <p>Fotografie, illustrazioni, disegni, testi, logo, grafica e animazioni presenti sul sito sono tutelati dal diritto d’autore e dagli altri diritti di proprietà intellettuale e appartengono allo studio e/o ai rispettivi artisti, o sono utilizzati con autorizzazione. Non possono essere copiati, riprodotti, modificati o utilizzati — anche come riferimento per realizzare tatuaggi identici — senza autorizzazione scritta del titolare dei diritti.</p>
+
+  <h2>4. Uso consentito del sito</h2>
+  <ul>
+    <li>Non utilizzare il sito per scopi illeciti o per arrecare danno ad altri.</li>
+    <li>Non tentare di compromettere la sicurezza o il funzionamento del sito e non inviare tramite il modulo spam, contenuti offensivi o illeciti.</li>
+    <li>Le immagini di riferimento che alleghi devono essere tue o devi avere il diritto di usarle: ci autorizzi a utilizzarle solo per valutare la tua richiesta.</li>
+  </ul>
+
+  <h2>5. Link a siti di terzi</h2>
+  <p>Il sito contiene link a servizi esterni (Instagram, Google, WhatsApp). Non controlliamo tali servizi e non rispondiamo dei loro contenuti o delle loro politiche.</p>
+
+  <h2>6. Limitazione di responsabilità</h2>
+  <p>Ci impegniamo a mantenere il sito accurato e disponibile, ma esso viene fornito “così com’è”, senza garanzie di funzionamento ininterrotto o assenza di errori. Nei limiti consentiti dalla legge, non rispondiamo di danni indiretti derivanti dall’uso del sito. Nulla in questi termini limita i diritti inderogabili dei consumatori.</p>
+
+  <h2>7. Dati personali e cookie</h2>
+  <p>Il trattamento dei dati è descritto nella <a href="/privacy/">Privacy Policy</a> e nella <a href="/cookie-policy/">Cookie Policy</a>.</p>
+
+  <h2>8. Modifiche</h2>
+  <p>Possiamo aggiornare questi termini; la versione in vigore è quella pubblicata su questa pagina, con la data di ultimo aggiornamento indicata in alto.</p>
+
+  <h2>9. Legge applicabile e foro</h2>
+  <p>Si applica la legge italiana. Per le controversie è competente il foro stabilito dalla legge; per i consumatori resta fermo il foro del luogo di residenza o domicilio.</p>
+
+  <h2>10. Contatti</h2>
+  <p>Per qualsiasi domanda: <Todo value={l.privacyEmail ?? site.contact.email} label="email di contatto" /> oppure Instagram <a href={site.social.instagram.url} target="_blank" rel="noopener">@{site.social.instagram.handle}</a>.</p>
+</Legal>

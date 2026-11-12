@@ -1,0 +1,290 @@
+---
+import { getImage } from 'astro:assets';
+import Photo from './Photo.astro';
+import Split from './Split.astro';
+import Arrow from './Arrow.astro';
+import Marks from './Marks.astro';
+import { works, hasRealWorks } from '../data/works';
+import { artistList, artists } from '../config/artists';
+
+const pad = (n: number) => String(n).padStart(2, '0');
+const items = await Promise.all(
+  works.map(async (w) => {
+    let full = '';
+    if (w.image) {
+      const g = await getImage({ src: w.image, width: Math.min(2400, w.image.width), format: 'webp', quality: 82 });
+      full = g.src;
+    }
+    return { w, full };
+  }),
+);
+const counts = {
+  all: works.length,
+  sink: works.filter((w) => w.artist === 'sink').length,
+  cromo: works.filter((w) => w.artist === 'cromo').length,
+};
+const sizeFor = (r: number) => (r > 1.15 ? '(min-width: 1100px) 44vw, (min-width: 700px) 60vw, 94vw' : '(min-width: 1100px) 29vw, (min-width: 700px) 44vw, 47vw');
+---
+
+<section class="portfolio" id="portfolio" data-portfolio aria-labelledby="portfolio-title">
+  <div class="wrap portfolio__head">
+    <p class="mono muted" data-reveal="fade">(04) — Portfolio</p>
+    <div class="portfolio__titlerow">
+      <Split as="h2" id="portfolio-title" class="display display--wide portfolio__title" lines={['Archive']} />
+      <p class="portfolio__count display display--narrow" aria-hidden="true" data-reveal="fade">({pad(counts.all)})</p>
+    </div>
+    <div class="portfolio__bar">
+      <p class="portfolio__lead" data-reveal>
+        {hasRealWorks ? 'Le opere dei due artisti.' : 'Segnaposto: le fotografie originali compaiono qui non appena vengono aggiunte all’archivio.'}
+        <span class="muted"> Filtra per artista, tocca un’opera per ingrandirla.</span>
+      </p>
+      <div class="filters" role="group" aria-label="Filtra per artista" data-reveal>
+        <button class="chip is-on" type="button" data-filter="all" aria-pressed="true">Tutti <sup>{counts.all}</sup></button>
+        {artistList.map((a) => (
+          <button class="chip" type="button" data-filter={a.id} aria-pressed="false">{a.name} <sup>{counts[a.id]}</sup></button>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <ul class="grid" data-grid>
+      {items.map(({ w, full }, i) => (
+        <>
+          <li
+            class="item"
+            data-item
+            data-id={w.id}
+            data-artist={w.artist}
+            style={`--r:${w.ratio.toFixed(3)}`}
+          >
+            <button
+              type="button"
+              class="item__btn"
+              data-lb-trigger
+              data-full={full}
+              data-w={w.image?.width}
+              data-h={w.image?.height}
+              data-alt={w.alt}
+              data-name={w.artistName}
+              data-ig={artists[w.artist].instagram}
+              data-handle={artists[w.artist].handle}
+              data-n={pad(w.n)}
+              data-cursor="Apri"
+              disabled={w.placeholder}
+            >
+              <span class="item__media">
+                <Photo
+                  image={w.image}
+                  alt={w.alt}
+                  sizes={sizeFor(w.ratio)}
+                  focal={w.focal}
+                  widths={[480, 720, 1080, 1600]}
+                  plateQuiet
+                  plateVariant={w.n}
+                />
+                <Marks size={12} inset={9} />
+              </span>
+              <span class="item__cap mono">
+                <span>N° {pad(w.n)} — {w.artistName}</span>
+                <span class="item__open">{w.placeholder ? 'Foto da inserire' : 'Apri'} <Arrow size={10} /></span>
+              </span>
+            </button>
+            {w.placeholder && <p class="item__slot mono">{w.slot}</p>}
+          </li>
+          {i === 2 && (
+            <li class="tile tile--stat" data-tile data-reveal aria-hidden="true">
+              <p class="tile__num display display--narrow">{pad(counts.all)}</p>
+              <p class="mono">Opere in archivio.<br />Un segno alla volta.</p>
+            </li>
+          )}
+        </>
+      ))}
+      <li class="tile tile--cta" data-tile-cta data-reveal>
+        <p class="tile__big serif">Il prossimo<br />potrebbe essere<br />il tuo.</p>
+        <a class="btn btn--solid" href="#contact" data-scroll-to="#contact" data-track="cta_portfolio_book"><span>Richiedi un appuntamento</span><Arrow /></a>
+      </li>
+    </ul>
+    <p class="grid__empty mono" data-empty hidden>Nessuna opera per questo filtro.</p>
+  </div>
+
+  <dialog class="lb" data-lb aria-label="Galleria opere" data-lenis-prevent>
+    <div class="lb__top">
+      <p class="mono lb__count" aria-live="polite"><span data-lb-cur>01</span> <span class="muted">/ <span data-lb-total>01</span></span></p>
+      <button class="lb__close mono" type="button" data-lb-close>Chiudi <span aria-hidden="true">✕</span></button>
+    </div>
+    <div class="lb__stage" data-lb-stage>
+      <button class="lb__nav lb__nav--prev" type="button" data-lb-prev aria-label="Opera precedente"><Arrow dir="l" size={22} /></button>
+      <figure class="lb__fig">
+        <img class="lb__img" data-lb-img alt="" decoding="async" />
+      </figure>
+      <button class="lb__nav lb__nav--next" type="button" data-lb-next aria-label="Opera successiva"><Arrow dir="r" size={22} /></button>
+    </div>
+    <div class="lb__meta">
+      <p class="mono"><span data-lb-artist>—</span> <span class="muted" data-lb-n></span></p>
+      <div class="lb__actions">
+        <a class="link-u mono" data-lb-ig href="#" target="_blank" rel="noopener">Instagram <Arrow size={10} /></a>
+        <a class="btn btn--sm" href="#contact" data-lb-book data-track="cta_lightbox_book"><span>Richiedi un appuntamento</span><Arrow /></a>
+      </div>
+    </div>
+  </dialog>
+</section>
+
+<style>
+  .portfolio {
+    position: relative;
+    padding-block: clamp(5rem, 12vh, 9rem);
+    background: var(--ink-0);
+  }
+  .portfolio__head { display: grid; gap: 1.4rem; margin-bottom: clamp(2rem, 5vh, 4rem); }
+  .portfolio__titlerow { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+  :global(.portfolio__title) { font-size: clamp(2.4rem, 11.4vw, 6rem); line-height: 0.84; }
+  .portfolio__count { font-size: clamp(1.4rem, 4vw, 4rem); color: var(--steel); padding-top: 0.6em; }
+  .portfolio__bar { display: grid; gap: 1.2rem; align-items: end; }
+  .portfolio__lead { max-width: 48ch; color: var(--bone-2); }
+  .filters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5em;
+    min-height: 44px;
+    align-items: center;
+    padding: 0 1.1rem;
+    border: 1px solid var(--line-2);
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bone-2);
+    transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out), border-color 0.4s var(--ease-out);
+  }
+  .chip sup { font-size: 0.8em; color: var(--steel); }
+  .chip:hover { border-color: var(--bone); color: var(--bone); }
+  .chip.is-on { background: var(--bone); border-color: var(--bone); color: var(--ink-0); }
+  .chip.is-on sup { color: var(--ink-4); }
+
+  /* masonry */
+  .grid { columns: 2; column-gap: var(--gap); }
+  .item, .tile { break-inside: avoid; margin-bottom: var(--gap); }
+  .item[hidden], .tile[hidden] { display: none; }
+  .item__btn { position: relative; display: block; width: 100%; text-align: left; }
+  .item__btn:disabled { cursor: default; }
+  .item__media { position: relative; display: block; width: 100%; aspect-ratio: var(--r); overflow: hidden; background: var(--ink-3); }
+  .item__media :global(.photo) { transition: transform 1.2s var(--ease-out); }
+  .item__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, rgb(5 5 5 / 0.8), transparent 45%);
+    opacity: 0;
+    transition: opacity 0.6s var(--ease-out);
+  }
+  .item__btn:not(:disabled):hover .item__media :global(.photo),
+  .item__btn:not(:disabled):focus-visible .item__media :global(.photo) { transform: scale(1.06); }
+  .item__btn:not(:disabled):hover .item__media::after,
+  .item__btn:not(:disabled):focus-visible .item__media::after { opacity: 1; }
+  .item__cap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    color: var(--bone);
+    transform: translateY(100%);
+    opacity: 0;
+    transition: transform 0.6s var(--ease-out), opacity 0.6s var(--ease-out);
+  }
+  .item__open { display: inline-flex; align-items: center; gap: 0.5em; }
+  .item__btn:hover .item__cap,
+  .item__btn:focus-visible .item__cap { transform: none; opacity: 1; }
+  .item__slot { margin-top: 0.5rem; color: var(--accent-text); word-break: break-all; font-size: 0.62rem; }
+  @media (max-width: 699px) {
+    .item__open { display: none; }
+    .item__cap { font-size: 0.6rem; padding: 0.6rem 0.7rem; }
+  }
+  @media (hover: none) {
+    .item__cap { transform: none; opacity: 1; }
+    .item__media::after { opacity: 1; }
+  }
+  .grid:has(.item__btn:not(:disabled):hover) .item:not(:hover) { opacity: 0.5; }
+  .item { transition: opacity 0.5s var(--ease-out); }
+
+  .tile { display: grid; align-content: space-between; gap: 1.5rem; padding: 1.4rem; border: 1px solid var(--line-2); min-height: 220px; }
+  .tile--stat { background: var(--ink-2); }
+  .tile__num { font-size: clamp(5rem, 14vw, 10rem); line-height: 0.8; color: transparent; -webkit-text-stroke: 1px var(--bone); }
+  .tile--cta { background: var(--bone); color: var(--ink-0); border-color: var(--bone); min-height: 300px; column-span: all; }
+  .tile__big { font-size: clamp(2rem, 7vw, 3.4rem); line-height: 1; }
+  .tile--cta .btn { --btn-bg: var(--ink-0); --btn-fg: var(--bone); border-color: var(--ink-0); justify-self: start; white-space: normal; max-width: 100%; }
+  .tile--cta .btn::before { background: var(--bone); }
+  .tile--cta .btn:hover { color: var(--ink-0); }
+  .grid__empty { margin-top: 2rem; color: var(--steel); }
+
+  @media (min-width: 700px) { .grid { columns: 2; } }
+  @media (min-width: 700px) {
+    :global(.portfolio__title) { font-size: clamp(3.4rem, 15vw, 17rem); line-height: 0.82; }
+    .tile--cta { column-span: none; }
+  }
+  @media (min-width: 1100px) {
+    .grid { columns: 3; }
+    .portfolio__bar { grid-template-columns: 1fr auto; }
+    .portfolio__head { margin-bottom: 4rem; }
+  }
+
+  /* ═════ LIGHTBOX ═════ */
+  .lb {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(5 5 5 / 0.97);
+    color: var(--bone);
+    overflow: hidden;
+  }
+  .lb:not([open]) { display: none; }
+  .lb[open] { display: grid; grid-template-rows: auto 1fr auto; }
+  .lb::backdrop { background: rgb(5 5 5 / 0.9); }
+  .lb__top, .lb__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem var(--pad);
+  }
+  .lb__close { display: inline-flex; align-items: center; gap: 0.7rem; min-height: 44px; padding: 0 0.4rem; }
+  .lb__stage { position: relative; display: grid; place-items: center; min-height: 0; padding-inline: clamp(0.5rem, 5vw, 6rem); touch-action: pan-y; }
+  .lb__fig { display: grid; place-items: center; width: 100%; height: 100%; min-height: 0; }
+  .lb__img { max-width: 100%; max-height: calc(100vh - 190px); max-height: calc(100dvh - 190px); width: auto; height: auto; object-fit: contain; background: var(--ink-2); box-shadow: 0 30px 90px rgb(0 0 0 / 0.8); }
+  .lb__nav {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-top: -28px;
+    border: 1px solid var(--line-2);
+    background: rgb(10 10 11 / 0.6);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .lb__nav:hover { background: var(--bone); color: var(--ink-0); }
+  .lb__nav--prev { left: clamp(0.5rem, 2vw, 2rem); }
+  .lb__nav--next { right: clamp(0.5rem, 2vw, 2rem); }
+  .lb__actions { display: flex; align-items: center; gap: 1.4rem; flex-wrap: wrap; justify-content: flex-end; }
+  @media (max-width: 699px) {
+    .lb__nav { width: 44px; height: 44px; margin-top: -22px; }
+    .lb__meta { flex-direction: column; align-items: flex-start; }
+    .lb__actions { justify-content: flex-start; }
+  }
+</style>

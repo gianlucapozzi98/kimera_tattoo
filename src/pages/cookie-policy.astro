@@ -1,0 +1,49 @@
+---
+import Legal from '../layouts/Legal.astro';
+import { site } from '../config/site';
+const hasGa = !!site.analytics.ga4;
+const hasPl = !!site.analytics.plausibleDomain;
+---
+<Legal
+  title="Cookie Policy"
+  kicker="Informativa sull’uso di cookie e strumenti analoghi"
+  path="/cookie-policy/"
+  description="Cookie Policy di Kimera Tattoo: quali cookie e tecnologie analoghe usiamo e come gestire le tue preferenze."
+>
+  <p>Questa pagina spiega quali cookie e tecnologie analoghe (come il <em>local storage</em>) usa il sito e come puoi controllarli. Puoi cambiare scelta in qualsiasi momento da <button type="button" class="link-u" data-cookie-open style="color:var(--bone);text-decoration:underline">Preferenze cookie</button>.</p>
+
+  <h2>Strumenti tecnici (sempre attivi)</h2>
+  <p>Necessari al funzionamento del sito: non richiedono consenso.</p>
+  <table>
+    <thead><tr><th>Nome</th><th>Scopo</th><th>Durata</th></tr></thead>
+    <tbody>
+      <tr><td><code>kimera-consent-v1</code> (local storage)</td><td>Ricorda le tue scelte sui cookie.</td><td>6 mesi</td></tr>
+      <tr><td><code>kimera-intro-seen</code> (session storage)</td><td>Evita di ripetere l’animazione introduttiva durante la stessa visita.</td><td>Sessione</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Statistiche (solo con consenso)</h2>
+  {hasGa || hasPl ? (
+    <>
+      <p>Se acconsenti, utilizziamo uno strumento di misurazione anonima per capire come viene usato il sito.</p>
+      <table>
+        <thead><tr><th>Servizio</th><th>Cookie / dati</th><th>Durata</th></tr></thead>
+        <tbody>
+          {hasGa && <tr><td>Google Analytics 4 (Google)</td><td><code>_ga</code>, <code>_ga_*</code></td><td>fino a 2 anni</td></tr>}
+          {hasPl && <tr><td>Plausible Analytics</td><td>Nessun cookie; misurazione aggregata</td><td>—</td></tr>}
+        </tbody>
+      </table>
+      <p>Finché non acconsenti nessuno di questi script viene caricato. Se revochi il consenso, gli strumenti smettono di funzionare dalla visita successiva; puoi inoltre eliminare i cookie dal browser.</p>
+    </>
+  ) : (
+    <p>Al momento il sito <strong>non utilizza strumenti di statistica</strong>. Se verranno attivati, saranno caricati solo dopo il tuo consenso e questa pagina sarà aggiornata.</p>
+  )}
+
+  <h2>Contenuti di terzi</h2>
+  <p>Il sito non incorpora contenuti di terzi (video, mappe, social) e carica i font dai propri server, senza chiamate a servizi esterni. I link verso Instagram, Google e WhatsApp portano su siti terzi che hanno proprie politiche sui cookie.</p>
+
+  <h2>Come gestire i cookie dal browser</h2>
+  <p>Puoi bloccare o eliminare i cookie dalle impostazioni del tuo browser (Chrome, Firefox, Safari, Edge). Bloccare gli strumenti tecnici può compromettere il funzionamento di alcune parti del sito.</p>
+
+  <p>Per sapere come trattiamo i tuoi dati personali consulta la <a href="/privacy/">Privacy Policy</a>.</p>
+</Legal>

@@ -1,0 +1,192 @@
+---
+import Photo from './Photo.astro';
+import Split from './Split.astro';
+import Marks from './Marks.astro';
+import Arrow from './Arrow.astro';
+import { artistList } from '../config/artists';
+import { portrait } from '../data/media';
+import { selectionFor } from '../data/works';
+
+const items = artistList.map((a, i) => ({
+  a,
+  p: portrait(a.id),
+  sel: selectionFor(a.id, 3),
+  n: String(i + 1).padStart(2, '0'),
+}));
+---
+
+<section class="artists" id="artists" data-artists aria-labelledby="artists-title">
+  <div class="wrap artists__head">
+    <p class="mono muted" data-reveal="fade">(03) — The Artists</p>
+    <Split as="h2" id="artists-title" class="display artists__title" lines={['Two hands,', 'one studio.']} lineClass={['', 'serif-line']} />
+  </div>
+
+  <div class="wrap artists__body">
+    <div class="artists__col">
+      <div class="artists__names" role="tablist" aria-label="Scegli un artista" aria-orientation="vertical">
+        {items.map(({ a, n }, i) => (
+          <button
+            class={`name${i === 0 ? ' is-active' : ''}`}
+            role="tab"
+            id={`tab-${a.id}`}
+            aria-controls={`panel-${a.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+            data-tab={a.id}
+            data-cursor="Vedi"
+          >
+            <span class="name__n mono">{n} — {a.role}</span>
+            <span class="name__t display display--wide">{a.display}</span>
+          </button>
+        ))}
+      </div>
+
+      <div class="artists__panels">
+        {items.map(({ a, sel }, i) => (
+          <div
+            class={`panel${i === 0 ? ' is-active' : ''}`}
+            role="tabpanel"
+            id={`panel-${a.id}`}
+            aria-labelledby={`tab-${a.id}`}
+            data-panel={a.id}
+            tabindex="0"
+          >
+            <p class="mono panel__handle"><a class="link-u" href={a.instagram} target="_blank" rel="noopener" data-track="instagram_click" data-track-label={a.id}>@{a.handle} <Arrow size={10} /></a></p>
+            <p class="panel__bio">{a.bio}</p>
+            <ul class="panel__sel" aria-label={`Selezione di lavori di ${a.name}`}>
+              {sel.map((w) => (
+                <li style={`--r:${w.ratio.toFixed(3)}`}>
+                  <button type="button" class="thumb" data-lightbox-open={w.id} aria-label={`Apri opera ${String(w.n).padStart(2, '0')} di ${a.name}`} data-cursor="Apri" disabled={w.placeholder}>
+                    <Photo image={w.image} alt={w.alt} sizes="160px" widths={[320, 480]} focal={w.focal} plateQuiet plateVariant={w.n} />
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <div class="panel__cta">
+              <a class="btn btn--solid" href="#contact" data-scroll-to="#contact" data-artist-pick={a.id} data-track="cta_artist_book" data-track-label={a.id}>
+                <span>Richiedi un appuntamento con {a.name}</span><Arrow />
+              </a>
+              <a class="btn" href={a.instagram} target="_blank" rel="noopener" data-track="instagram_click" data-track-label={a.id}>
+                <span>Instagram</span><Arrow />
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="artists__stage" aria-hidden="false">
+      <div class="stage">
+        {items.map(({ a, p }, i) => (
+          <figure class={`stage__img${i === 0 ? ' is-active' : ''}`} data-img={a.id}>
+            <div class="stage__in" data-in>
+              <Photo
+                image={p.image}
+                alt={p.alt}
+                sizes="(min-width: 900px) 40vw, 92vw"
+                widths={[480, 800, 1200, 1600]}
+                plateVariant={i + 1}
+                plateQuiet
+              />
+            </div>
+            <Marks size={16} inset={12} />
+            <figcaption class="stage__cap mono">
+              {a.display} — {a.role}
+              {p.placeholder && <span class="stage__slot">Ritratto da inserire · src/assets/artists/{a.id}.jpg</span>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .artists {
+    position: relative;
+    padding-block: clamp(5rem, 12vh, 9rem);
+    background: var(--ink-1);
+    overflow: clip;
+  }
+  .artists__head { display: grid; gap: 1.2rem; margin-bottom: clamp(2.5rem, 7vh, 5rem); }
+  :global(.artists__title) { font-size: clamp(3rem, 9.4vw, 11rem); line-height: 0.86; }
+  :global(.artists__title .serif-line) {
+    font-family: var(--f-serif);
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: -0.02em;
+    font-size: 1.08em;
+  }
+  :global(.artists__title .serif-line .sw) { padding-bottom: 0.24em; margin-bottom: -0.24em; padding-right: 0.06em; }
+
+  .artists__body { display: grid; gap: 2.4rem; }
+  .artists__col { display: grid; gap: 2rem; align-content: start; }
+
+  /* nomi (tab) */
+  .artists__names { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; position: relative; z-index: 3; }
+  .name {
+    display: grid;
+    gap: 0.4rem;
+    text-align: left;
+    padding-block: 0.5rem;
+    border-top: 1px solid var(--line-2);
+    min-height: 44px;
+    color: var(--steel-2);
+    transition: color 0.5s var(--ease-out);
+  }
+  .name__n { color: var(--steel); }
+  .name__t {
+    font-size: clamp(1.8rem, 9.4vw, 4.6rem);
+    line-height: 0.9;
+    color: transparent;
+    -webkit-text-stroke: 1.2px var(--steel-2);
+    transition: color 0.55s var(--ease-out), -webkit-text-stroke-color 0.55s var(--ease-out), transform 0.7s var(--ease-out);
+  }
+  .name:hover .name__t,
+  .name:focus-visible .name__t { -webkit-text-stroke-color: var(--bone); }
+  .name.is-active { border-top-color: var(--bone); }
+  .name.is-active .name__t { color: var(--bone); -webkit-text-stroke-color: var(--bone); }
+
+  /* pannelli */
+  .artists__panels { position: relative; }
+  .panel { display: none; gap: 1.4rem; }
+  .panel.is-active { display: grid; }
+  :global(html:not(.js)) .panel { display: grid; margin-bottom: 3rem; }
+  .panel__handle { color: var(--bone); }
+  .panel__bio { max-width: 46ch; color: var(--bone-2); }
+  .panel__sel { display: flex; gap: 0.7rem; align-items: flex-end; }
+  .panel__sel li { width: clamp(70px, 22vw, 120px); aspect-ratio: clamp(0.72, var(--r), 1.4); }
+  .thumb { position: relative; display: block; width: 100%; height: 100%; overflow: hidden; background: var(--ink-3); }
+  .thumb:disabled { cursor: default; }
+  .thumb :global(.photo) { transition: transform 0.9s var(--ease-out); }
+  .thumb:not(:disabled):hover :global(.photo) { transform: scale(1.08); }
+  .panel__cta { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+
+  /* stage (immagine) */
+  .stage { position: relative; aspect-ratio: 4 / 5; max-height: 72svh; width: 100%; background: var(--ink-2); overflow: hidden; }
+  .stage__img { position: absolute; inset: 0; margin: 0; visibility: hidden; }
+  .stage__img.is-active { visibility: visible; }
+  :global(html:not(.js)) .stage__img:first-child { visibility: visible; }
+  .stage__in { position: absolute; inset: 0; will-change: transform; }
+  .stage__cap { position: absolute; left: 16px; right: 16px; bottom: 14px; display: grid; gap: 2px; color: var(--bone); z-index: 2; }
+  .stage__slot { color: var(--accent-text); word-break: break-all; }
+
+  /* ═════ DESKTOP ═════ */
+  @media (min-width: 900px) {
+    .artists__body {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: var(--gap);
+      align-items: start;
+    }
+    .artists__names { grid-template-columns: 1fr; gap: 0; margin-right: -9vw; }
+    .name { border-top: 0; padding-block: 0; min-height: 0; }
+    .name__n { margin-bottom: -0.4rem; }
+    .name__t { font-size: clamp(5rem, 14.6vw, 17rem); line-height: 0.88; }
+    .name.is-active .name__t { transform: translateX(1.2vw); }
+    .name { mix-blend-mode: normal; }
+    .artists__stage { position: sticky; top: calc(var(--header-h) + 2rem); }
+    .stage { max-height: 78svh; }
+    .artists__col { gap: 2.6rem; }
+  }
+</style>

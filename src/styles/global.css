@@ -1,0 +1,473 @@
+/* ════════════════════════════════════════════════════════════
+   KIMERA TATTOO — sistema visivo
+   Direzione: "Ink & Ash" — dark editorial / brutalist premium.
+   Catalogo d'arte analogico: tavole numerate, crocini di registro,
+   grana di pellicola, tipografia oversized, incisione.
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Inchiostro (neri / antracite / carbone) */
+  --ink-0: #050505;
+  --ink-1: #0a0a0b;
+  --ink-2: #111113;
+  --ink-3: #19191c;
+  --ink-4: #242428;
+  --ink-5: #36363c;
+
+  /* Carta / metalli */
+  --bone: #ece8df;
+  --bone-2: #cfcac0;
+  --steel: #9a9da3; /* testo secondario: ≥ 7:1 su ink-1 */
+  --steel-2: #6b6e75; /* solo decorativo */
+
+  /* Accento — SEGNAPOSTO: allinea al colore del logo originale quando disponibile */
+  --accent: #c8361f;
+  --accent-text: #ff6f55; /* variante leggibile (≥ 6:1) per testi piccoli */
+
+  --line: rgb(236 232 223 / 0.13);
+  --line-2: rgb(236 232 223 / 0.26);
+
+  --pad: clamp(18px, 3.4vw, 64px);
+  --gap: clamp(12px, 1.6vw, 28px);
+  --header-h: 76px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --f-display: 'Archivo Variable', 'Archivo', 'Arial Narrow', Impact, sans-serif;
+  --f-serif: 'Instrument Serif', 'Times New Roman', Georgia, serif;
+  --f-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  background: var(--ink-1);
+  scroll-padding-top: calc(var(--header-h) + 8px);
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--ink-1);
+  color: var(--bone);
+  font-family: var(--f-display);
+  font-stretch: 100%;
+  font-weight: 400;
+  font-size: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+
+img,
+svg,
+video,
+canvas {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+picture {
+  display: contents;
+}
+.arr {
+  display: inline-block;
+  flex: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+::selection {
+  background: var(--bone);
+  color: var(--ink-0);
+}
+
+:focus-visible {
+  outline: 2px solid var(--bone);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: fixed;
+  left: var(--pad);
+  top: 12px;
+  z-index: 1000;
+  padding: 12px 18px;
+  background: var(--bone);
+  color: var(--ink-0);
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transform: translateY(-200%);
+  transition: transform 0.25s var(--ease-out);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+/* ── Tipografia ─────────────────────────────────────────── */
+.display {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-stretch: 100%;
+  text-transform: uppercase;
+  line-height: 0.86;
+  letter-spacing: -0.025em;
+}
+.display--wide {
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: -0.035em;
+}
+.display--narrow {
+  font-stretch: 62%;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+.serif {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -0.015em;
+}
+.mono {
+  font-family: var(--f-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.muted {
+  color: var(--steel);
+}
+.outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--bone);
+}
+.accent {
+  color: var(--accent);
+}
+.is-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--bone);
+}
+
+/* parole splittate (build-time) per i reveal tipografici */
+.sw {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.sw__i {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ── Layout ─────────────────────────────────────────────── */
+.wrap {
+  padding-inline: var(--pad);
+}
+.section {
+  position: relative;
+}
+
+/* ── Bottoni / link ─────────────────────────────────────── */
+.btn {
+  --btn-bg: transparent;
+  --btn-fg: var(--bone);
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9em;
+  min-height: 52px;
+  padding: 0 1.6em;
+  border: 1px solid var(--bone);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-family: var(--f-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: color 0.45s var(--ease-out), border-color 0.45s var(--ease-out);
+}
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--bone);
+  transform: translateY(101%);
+  transition: transform 0.55s var(--ease-out);
+}
+.btn:hover,
+.btn:focus-visible {
+  color: var(--ink-0);
+}
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: none;
+}
+.btn--solid {
+  --btn-bg: var(--bone);
+  --btn-fg: var(--ink-0);
+}
+.btn--solid::before {
+  background: var(--ink-1);
+}
+.btn--solid:hover,
+.btn--solid:focus-visible {
+  color: var(--bone);
+}
+.btn--sm {
+  min-height: 40px;
+  padding: 0 1.1em;
+  font-size: 0.68rem;
+}
+.btn .arr {
+  display: inline-block;
+  transition: transform 0.5s var(--ease-out);
+}
+.btn:hover .arr {
+  transform: translate(3px, -3px);
+}
+
+.link-u {
+  position: relative;
+  display: inline-block;
+  padding-block: 0.4em;
+}
+.link-u::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.3em;
+  height: 1px;
+  background: currentColor;
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-out);
+}
+.link-u:hover::after {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: u-in 0.6s var(--ease-out) 0.15s forwards;
+}
+@keyframes u-in {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ── Texture: grana + vignettatura ──────────────────────── */
+.grain,
+.vignette {
+  position: fixed;
+  pointer-events: none;
+  z-index: 90;
+}
+.grain {
+  inset: -60%;
+  opacity: 0.075;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n' x='0' y='0'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  background-size: 240px 240px;
+  animation: grain 0.9s steps(7) infinite;
+  will-change: transform;
+}
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  14% { transform: translate(-7%, 4%); }
+  28% { transform: translate(5%, -6%); }
+  42% { transform: translate(-3%, 8%); }
+  57% { transform: translate(8%, 2%); }
+  71% { transform: translate(-6%, -4%); }
+  85% { transform: translate(3%, 6%); }
+  100% { transform: translate(0, 0); }
+}
+.vignette {
+  inset: 0;
+  z-index: 89;
+  background: radial-gradient(ellipse 120% 100% at 50% 40%, transparent 55%, rgb(0 0 0 / 0.55) 100%);
+}
+
+/* grana locale (immagini, sezioni) */
+.grain-local {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ── Segnaposto onesto (da sostituire con foto originali) ── */
+.todo {
+  display: inline;
+  padding: 0.05em 0.4em;
+  background: rgb(200 54 31 / 0.18);
+  outline: 1px dashed var(--accent);
+  color: var(--bone);
+  font-family: var(--f-mono);
+  font-size: 0.85em;
+}
+
+/* ── Stati iniziali delle animazioni (solo con JS + motion ok) ─
+   Un elemento torna "naturale" quando riceve .is-in (a fine reveal). */
+.anim:not(.anim-fail) [data-reveal]:not(.is-in) {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+.anim:not(.anim-fail) [data-reveal='fade']:not(.is-in) {
+  transform: none;
+}
+.anim:not(.anim-fail) [data-split]:not(.is-in) .sw__i {
+  transform: translate3d(0, 112%, 0);
+}
+
+/* ── Pagine "Cookie / scelte" e accessibilità movimento ──── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --header-h: 64px;
+  }
+  .grain {
+    opacity: 0.06;
+  }
+}
+
+/* ── Cursore-etichetta ──────────────────────────────────── */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 400;
+  pointer-events: none;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.cursor__label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  margin: -42px 0 0 -42px;
+  border-radius: 50%;
+  background: var(--bone);
+  color: var(--ink-0);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  transform: scale(0);
+  transition: transform 0.45s var(--ease-out);
+}
+.cursor.is-active .cursor__label {
+  transform: scale(1);
+}
+
+html.is-locked,
+html.is-locked body {
+  overflow: hidden;
+}

@@ -1,0 +1,152 @@
+---
+import { manifesto } from '../data/copy';
+
+const words = manifesto.text.split(' ').map((w) => {
+  const em = w.startsWith('*');
+  return { w: w.replace(/\*/g, ''), em };
+});
+const d = manifesto.definition;
+const marquee = ['Kimera Tattoo', 'Sink', 'Cromo', 'Your skin', 'Your story', 'Our art'];
+---
+
+<section class="manifesto" id="manifesto" data-manifesto aria-labelledby="manifesto-label">
+  <div class="manifesto__grid wrap">
+    <div class="manifesto__side">
+      <p class="mono muted" id="manifesto-label" data-reveal>(00) — Manifesto</p>
+      <dl class="def" data-reveal>
+        <dt class="def__term serif">{d.term}</dt>
+        <dd class="def__phon mono">{d.phon} <span>{d.pos}</span></dd>
+        <dd class="def__body">{d.body}</dd>
+      </dl>
+    </div>
+
+    <p class="manifesto__text display" data-words>
+      <span class="sr-only">{manifesto.text.replace(/\*/g, '')}</span>
+      <span aria-hidden="true">
+        {words.map((x) =>
+          x.em ? (
+            <><span class="mw mw--serif serif">{x.w}</span>{' '}</>
+          ) : (
+            <><span class="mw">{x.w}</span>{' '}</>
+          ),
+        )}
+      </span>
+    </p>
+  </div>
+
+  <div class="strip" aria-hidden="true">
+    <div class="strip__track">
+      {[0, 1].map(() => (
+        <ul class="strip__row">
+          {[...marquee, ...marquee].map((m) => (
+            <li class="strip__item"><span>{m}</span><i>×</i></li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    position: relative;
+    padding-top: clamp(6rem, 16vh, 12rem);
+    background: var(--ink-1);
+  }
+  .manifesto__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    padding-bottom: clamp(5rem, 14vh, 10rem);
+  }
+  .def {
+    margin-top: 1.4rem;
+    max-width: 28ch;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line-2);
+  }
+  .def__term {
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    line-height: 1;
+  }
+  .def__phon {
+    margin-top: 0.5rem;
+    color: var(--steel);
+  }
+  .def__phon span { margin-left: 0.8em; color: var(--bone-2); }
+  .def__body {
+    margin-top: 0.9rem;
+    color: var(--bone-2);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .manifesto__text {
+    font-weight: 700;
+    font-stretch: 92%;
+    text-transform: none;
+    letter-spacing: -0.03em;
+    line-height: 1.04;
+    font-size: clamp(2rem, 5.6vw, 6.4rem);
+    max-width: 22ch;
+  }
+  .mw {
+    display: inline-block;
+    transition: color 0.2s linear;
+  }
+  .mw--serif {
+    font-weight: 400;
+    font-size: 1.12em;
+    letter-spacing: -0.02em;
+  }
+  :global(.anim:not(.anim-fail)) .mw {
+    opacity: 0.4; /* parole "spente": testo grande, contrasto ≥ 3:1 */
+  }
+
+  /* striscia tipografica a scorrimento continuo */
+  .strip {
+    position: relative;
+    overflow: hidden;
+    background: var(--bone);
+    color: var(--ink-0);
+    border-block: 1px solid var(--ink-0);
+  }
+  .strip__track {
+    display: flex;
+    width: max-content;
+    animation: strip 46s linear infinite;
+  }
+  .strip__row {
+    display: flex;
+    flex: none;
+  }
+  .strip__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 2.2rem;
+    padding: 1rem 2.2rem 1rem 0;
+    font-family: var(--f-display);
+    font-weight: 900;
+    font-stretch: 118%;
+    font-size: clamp(1.4rem, 2.6vw, 2.4rem);
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+  .strip__item i {
+    font-style: normal;
+    font-family: var(--f-mono);
+    font-size: 0.7em;
+  }
+  @keyframes strip {
+    to { transform: translateX(-50%); }
+  }
+
+  @media (min-width: 900px) {
+    .manifesto__grid {
+      grid-template-columns: minmax(220px, 3fr) 9fr;
+      gap: var(--gap);
+    }
+    .manifesto__text { max-width: 20ch; }
+    .manifesto__side { position: sticky; top: calc(var(--header-h) + 2rem); align-self: start; }
+  }
+</style>

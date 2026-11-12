@@ -1,0 +1,59 @@
+---
+/**
+ * PLATE — segnaposto dichiarato per una fotografia originale non ancora fornita.
+ * Non simula un tatuaggio: è una tavola di stampa vuota, con numero e percorso
+ * esatto dove inserire il file. Riempie il contenitore padre.
+ */
+import Marks from './Marks.astro';
+interface Props {
+  n?: number | string;
+  slot?: string;
+  variant?: number;
+  kind?: string;
+  quiet?: boolean;
+}
+const { n, slot, variant = 0, kind = 'Foto da inserire', quiet = false } = Astro.props;
+const num = typeof n === 'number' ? String(n).padStart(2, '0') : n;
+---
+<div class={`plate plate--v${variant % 3}`} data-placeholder="true" aria-hidden="true">
+  <span class="plate__bg"></span>
+  {num && <span class="plate__num display display--narrow">{num}</span>}
+  <Marks size={16} inset={14} />
+  {!quiet && (
+    <span class="plate__label mono">
+      <b>{kind}</b>
+      {slot && <span>{slot}</span>}
+    </span>
+  )}
+</div>
+<style>
+  .plate { position: absolute; inset: 0; overflow: hidden; background: var(--ink-3); color: var(--steel); }
+  .plate__bg { position: absolute; inset: 0; }
+  .plate--v0 .plate__bg {
+    background:
+      radial-gradient(120% 90% at 18% 8%, rgb(236 232 223 / .13), transparent 55%),
+      repeating-linear-gradient(135deg, rgb(236 232 223 / .055) 0 1px, transparent 1px 9px),
+      linear-gradient(180deg, var(--ink-3), var(--ink-2));
+  }
+  .plate--v1 .plate__bg {
+    background:
+      radial-gradient(70% 60% at 70% 40%, rgb(236 232 223 / .12), transparent 60%),
+      repeating-radial-gradient(circle at 70% 40%, rgb(236 232 223 / .06) 0 1px, transparent 1px 14px),
+      linear-gradient(200deg, var(--ink-4), var(--ink-2));
+  }
+  .plate--v2 .plate__bg {
+    background:
+      radial-gradient(100% 80% at 50% 100%, rgb(236 232 223 / .12), transparent 60%),
+      repeating-linear-gradient(0deg, rgb(236 232 223 / .05) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(90deg, rgb(236 232 223 / .035) 0 1px, transparent 1px 28px),
+      linear-gradient(160deg, var(--ink-3), var(--ink-1));
+  }
+  .plate__num {
+    position: absolute; right: 7%; bottom: 3%;
+    font-size: clamp(5rem, 24cqw, 22rem); line-height: .8;
+    color: transparent; -webkit-text-stroke: 1px rgb(236 232 223 / .22);
+  }
+  .plate__label { position: absolute; left: 18px; bottom: 16px; display: grid; gap: 3px; max-width: 70%; font-size: .62rem; opacity: .9; }
+  .plate__label b { color: var(--bone); font-weight: 600; }
+  .plate__label span { color: var(--steel); word-break: break-all; }
+</style>
