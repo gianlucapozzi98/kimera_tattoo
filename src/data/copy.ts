@@ -56,7 +56,7 @@ export const studio = {
   kicker: 'The Studio',
   title: ['UNO SPAZIO.', 'UN’IDENTITÀ.'],
   intro:
-    'Il racconto di Kimera passa anche dai suoi ambienti. Le fotografie reali dello studio verranno inserite qui, per far sentire l’atmosfera prima ancora di entrare.',
+    'Il racconto di Kimera passa anche dai suoi ambienti: luce bassa, carta, inchiostro. Un luogo pensato per far sentire l’atmosfera prima ancora di entrare.',
   pillars: [
     { n: '01', t: 'Atmosfera', d: 'Un luogo ha un carattere. Il tatuaggio comincia già da come ci si sente entrando.' },
     { n: '02', t: 'Cura', d: 'Negli spazi, nei dettagli, nel modo di accogliere: la cura è parte del lavoro.' },
