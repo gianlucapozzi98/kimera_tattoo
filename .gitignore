@@ -9,3 +9,5 @@ dist/
 *.log
 test-results/
 audit-output/
+*.bundle
+*.zip

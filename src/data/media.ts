@@ -13,13 +13,12 @@ import type { ImageMetadata } from 'astro';
 import type { ArtistId } from '../config/artists';
 import { works, aliveWork, hasRealWorks } from './works';
 
-const ext = '{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}';
 const collator = new Intl.Collator('it', { numeric: true });
 
 const logoFiles = import.meta.glob<ImageMetadata>('/src/assets/brand/logo.{svg,png,webp,jpg,jpeg}', { eager: true, import: 'default' });
-const heroFiles = import.meta.glob<ImageMetadata>(`/src/assets/hero/*.${ext}`, { eager: true, import: 'default' });
-const portraitFiles = import.meta.glob<ImageMetadata>(`/src/assets/artists/*.${ext}`, { eager: true, import: 'default' });
-const studioFiles = import.meta.glob<ImageMetadata>(`/src/assets/studio/*.${ext}`, { eager: true, import: 'default' });
+const heroFiles = import.meta.glob<ImageMetadata>('/src/assets/hero/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}', { eager: true, import: 'default' });
+const portraitFiles = import.meta.glob<ImageMetadata>('/src/assets/artists/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}', { eager: true, import: 'default' });
+const studioFiles = import.meta.glob<ImageMetadata>('/src/assets/studio/*.{jpg,jpeg,png,webp,avif,JPG,JPEG,PNG,WEBP,AVIF}', { eager: true, import: 'default' });
 
 export const logo: ImageMetadata | undefined = Object.values(logoFiles)[0];
 
