@@ -79,7 +79,11 @@ export function initArtists() {
   tabs.forEach((t) => {
     const id = t.dataset.tab!;
     // desktop: al passaggio del mouse; touch/tastiera: tap / focus + invio
-    t.addEventListener('pointerenter', (e) => e.pointerType === 'mouse' && performance.now() - lastScroll > 250 && activate(id));
+    // pointermove (oltre a pointerenter): se il puntatore resta fermo durante lo scroll non scatta nulla,
+    // appena si muove di nuovo sopra il nome l'artista cambia
+    const hover = (e: PointerEvent) => e.pointerType === 'mouse' && performance.now() - lastScroll > 140 && activate(id);
+    t.addEventListener('pointerenter', hover);
+    t.addEventListener('pointermove', hover);
     t.addEventListener('click', () => activate(id));
     t.addEventListener('keydown', (e) => {
       const i = tabs.indexOf(t);

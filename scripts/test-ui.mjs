@@ -31,6 +31,7 @@ console.log('\nIntro e hero');
 ok('intro completata (classe intro-done)', await page.evaluate(() => document.documentElement.classList.contains('intro-done')));
 ok('overlay intro rimosso dal DOM', (await page.locator('[data-intro]').count()) === 0);
 ok('titolo h1 visibile', await page.locator('h1').isVisible());
+ok('Sink attivo di default (stato iniziale)', (await page.locator('#tab-sink').getAttribute('aria-selected')) === 'true' && (await page.locator('#tab-cromo').getAttribute('aria-selected')) === 'false');
 ok('scroll sbloccato dopo l’intro', !(await page.evaluate(() => document.documentElement.classList.contains('is-locked'))));
 const hasReal = (await page.locator('[data-lb-trigger]:not([disabled])').count()) > 0;
 
@@ -80,7 +81,6 @@ ok('barra di avanzamento > 0', barScale > 0.05, String(barScale));
 console.log('\nArtisti');
 await page.mouse.move(3, 3);
 await page.evaluate(() => document.getElementById('artists').scrollIntoView()); await page.waitForTimeout(1800);
-ok('Sink attivo di default', (await page.locator('#tab-sink').getAttribute('aria-selected')) === 'true');
 await page.locator('#tab-cromo').hover(); await page.waitForTimeout(2200);
 ok('hover su CROMO cambia artista', (await page.locator('#tab-cromo').getAttribute('aria-selected')) === 'true' && await page.locator('#panel-cromo').isVisible() && !(await page.locator('#panel-sink').isVisible()));
 await page.locator('#tab-cromo').focus(); await page.keyboard.press('ArrowUp'); await page.waitForTimeout(2200);
