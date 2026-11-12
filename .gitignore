@@ -11,3 +11,4 @@ test-results/
 audit-output/
 *.bundle
 *.zip
+.vercel/
