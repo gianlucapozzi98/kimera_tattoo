@@ -35,7 +35,9 @@ export function heroImage(): { image?: ImageMetadata; alt: string; placeholder: 
 
 export function portrait(id: ArtistId): { image?: ImageMetadata; alt: string; placeholder: boolean } {
   const hit = Object.entries(portraitFiles).find(([p]) => new RegExp(`/${id}\\.[^/]+$`, 'i').test(p));
-  if (hit) return { image: hit[1], alt: `Ritratto di ${id === 'sink' ? 'Sink' : 'Cromo'}, tatuatore di Kimera Tattoo`, placeholder: false };
+  // Oggi in artists/ c'è un'opera rappresentativa (nessun ritratto disponibile su Instagram):
+  // quando arriva un ritratto vero, aggiorna questo testo alternativo.
+  if (hit) return { image: hit[1], alt: `Tatuaggio di ${id === 'sink' ? 'Sink' : 'Cromo'} realizzato presso Kimera Tattoo`, placeholder: false };
   return { alt: '', placeholder: true };
 }
 

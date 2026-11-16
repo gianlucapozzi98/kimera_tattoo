@@ -34,6 +34,23 @@ export interface WorkMeta {
   order?: number;
 }
 
+/*
+ * Foto originali dai profili Instagram dello studio e degli artisti (novembre 2026).
+ * Titoli = didascalie scritte dagli artisti nei post; fonti in src/assets/FONTI.md.
+ */
 export const workMeta: Record<string, WorkMeta> = {
-  // 'sink/01.jpg': { alt: '…', showcase: true },
+  // — Sink (@sink_tatt00)
+  'sink/01.jpg': { title: 'Back cover up', alt: 'Schiena maschile con un grande blackwork dark ornamental a forma di ali, fotografata davanti al logo Kimera', focal: [0.5, 0.35] },
+  'sink/02.jpg': { title: 'Non dormire', alt: 'Dark lettering in nero pieno su fianco e schiena, vista laterale', focal: [0.45, 0.4] },
+  'sink/03.jpg': { title: 'Dark ornamental forearm', alt: 'Avambraccio con forme dark ornamental nere e una mezzaluna', focal: [0.5, 0.3] },
+  'sink/04.jpg': { title: 'Gothic back', alt: 'Schiena femminile interamente tatuata con architetture gotiche e un rosone alla base del collo', focal: [0.55, 0.28] },
+  'sink/05.jpg': { title: 'Fluid dark shapes', alt: 'Schiena maschile con forme nere fluide che scendono dalle spalle', focal: [0.5, 0.35] },
+  'sink/06.jpg': { title: 'Dark Shinigami', alt: 'Avambraccio con il volto di uno shinigami in black and grey, realizzato in una seduta', focal: [0.5, 0.45] },
+  // — Cromo (@cromo_ink)
+  'cromo/01.jpg': { title: 'Medusa & Negative Dark Ornamental', alt: 'Polpaccio con il volto di Medusa e serpenti in black and grey, con ornamenti in negativo', focal: [0.5, 0.3] },
+  'cromo/02.jpg': { title: 'Ornamentale floreale', alt: 'Schiena femminile con un ornamentale floreale simmetrico dalle spalle alle scapole', focal: [0.5, 0.35] },
+  'cromo/03.jpg': { title: 'Double Leg Ornamental Dark & Flower', alt: 'Retro di entrambe le gambe con fiori e ornamenti dark in nero', focal: [0.35, 0.35] },
+  'cromo/04.jpg': { title: 'Infernum', alt: 'Backpiece con teschio, ossa e capra in blackwork', focal: [0.5, 0.45] },
+  'cromo/05.jpg': { title: 'Bat Dark Tattoo', alt: 'Pipistrello ad ali spiegate con luna, tatuato sul petto', focal: [0.5, 0.35] },
+  'cromo/06.jpg': { title: 'Ornamental Dark Head', alt: 'Ornamentale dark sul lato della testa rasata, fino al collo', focal: [0.4, 0.4] },
 };
