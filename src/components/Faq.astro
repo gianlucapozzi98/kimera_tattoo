@@ -28,8 +28,10 @@ const pad = (n: number) => String(n).padStart(2, '0');
 <style>
   .faq { padding-block: clamp(5rem, 12vh, 9rem); background: var(--ink-1); border-top: 1px solid var(--line); }
   .faq__grid { display: grid; gap: 2.5rem; }
-  .faq__head { display: grid; gap: 1.2rem; align-content: start; }
-  :global(.faq__title) { font-size: clamp(3rem, 9vw, 9rem); line-height: 0.86; }
+  /* La colonna del titolo è un contenitore: il titolo si dimensiona sulla SUA larghezza, non sulla finestra. */
+  .faq__head { display: grid; gap: 1.2rem; align-content: start; container-type: inline-size; }
+  /* "DOMANDE" è largo ~5.3em: 18cqi lo tiene al ~95% della colonna, senza invadere l'elenco. */
+  :global(.faq__title) { font-size: clamp(2.6rem, 6.5vw, 9rem); font-size: clamp(2.6rem, 18cqi, 9rem); line-height: 0.86; }
   :global(.faq__title .serif-line) { font-family: var(--f-serif); font-style: italic; font-weight: 400; text-transform: none; letter-spacing: -0.02em; font-size: 1.08em; }
   :global(.faq__title .serif-line .sw) { padding-bottom: 0.24em; margin-bottom: -0.24em; padding-right: 0.06em; }
   .q { border-top: 1px solid var(--line-2); }
